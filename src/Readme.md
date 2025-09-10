@@ -1,70 +1,89 @@
 ## wcs-java-sdk
 
-java SDK基于网宿云存储API规范构建,支持1.6及以上版本（目前支持java平台使用，不适合android平台）。
+This Java SDK for CDNetworks Object Storage is built on our public API specification and supports Java 1.6 and higher.
 
- - [使用指南](#使用指南)
-   - [准备开发环境](#准备开发环境)
-   - [配置信息](#配置信息)
-   - [文件上传](#文件上传)
-     - [普通表单上传](#普通表单上传)
-     - [分片上传](#分片上传)
-   - [资源管理](#资源管理)
-     - [删除文件](#删除文件)
-     - [获取文件信息](#获取文件信息)
-     - [列举资源](#列举资源)
-     - [复制资源](#复制资源)
-     - [移动资源](#移动资源)
-     - [更新镜像资源](#更新镜像资源)
-   - [音视频操作](#音视频操作)
-   - [抓取资源](#抓取资源)
+**Note**: This SDK is designed for Java SE environments and is not suitable for Android development.
 
-### 使用指南
-#### 准备开发环境
- - 在Maven项目中加入依赖项
+- [User Guide](https://www.google.com/search?q=%23user-guide)
+    - [Setting up the Development Environment](https://www.google.com/search?q=%23setting-up-the-development-environment)
+    - [Configuration](https://www.google.com/search?q=%23configuration)
+    - [File Upload](https://www.google.com/search?q=%23file-upload)
+        - [Simple Form Upload](https://www.google.com/search?q=%23simple-form-upload)
+        - [Multipart Upload](https://www.google.com/search?q=%23multipart-upload)
+    - [Resource Management](https://www.google.com/search?q=%23resource-management)
+        - [Deleting a File](https://www.google.com/search?q=%23deleting-a-file)
+        - [Getting File Information](https://www.google.com/search?q=%23getting-file-information)
+        - [Listing Resources](https://www.google.com/search?q=%23listing-resources)
+        - [Copying a Resource](https://www.google.com/search?q=%23copying-a-resource)
+        - [Moving a Resource](https://www.google.com/search?q=%23moving-a-resource)
+        - [Updating a Mirrored Resource](https://www.google.com/search?q=%23updating-a-mirrored-resource)
+    - [Audio/Video Processing](https://www.google.com/search?q=%23audiovideo-processing)
+    - [Fetching a Remote Resource](https://www.google.com/search?q=%23fetching-a-remote-resource)
 
-        <dependency>
-            <groupId>com.chinanetcenter.wcs.sdk</groupId>
-            <artifactId>wcs-java-sdk</artifactId>
-            <version>2.0.x</version>
-        </dependency>
+### User Guide
 
- - Jar包方式（wcs-java-sdk.jar和lib.zip） [Jar下载链接](https://wcsd.chinanetcenter.com/sdk/cnc-java-sdk-wcs.zip)
+### Setting up the Development Environment
 
-在工程中引入SDK的wcs-java-sdk-x.x.x.jar包和wcs-java-sdk-x.x.x-dependencies.zip文件中解压出来的第三方jar包（以eclipse为例）
+- **Add the dependency in your Maven project:**XML
+    
+    # 
+    
+    `<dependency>
+        <groupId>com.chinanetcenter.wcs.sdk</groupId>
+        <artifactId>wcs-java-sdk</artifactId>
+        <version>2.0.x</version>
+    </dependency>`
+    
+- **Using the JAR file:** [Download JARs](https://wcsd.chinanetcenter.com/sdk/cnc-java-sdk-wcs.zip)
+    
+    Add `wcs-java-sdk-x.x.x.jar` and the third-party JARs extracted from `wcs-java-sdk-x.x.x-dependencies.zip` to your project's build path.
+    
 
-#### 配置信息
-用户接入网宿云存储时，需要使用一对有效的AK和SK进行签名认证，并填写“上传域名”和“管理域名”等配置信息进行文件操作。配置信息只需要在整个应用程序中初始化一次即可，具体操作如下：
+### Configuration
 
- - 开通网宿云存储平台账户
- - 登录网宿云存储平台，在“安全管理”下的“密钥管理”查看AK和SK，“域名查询”查看上传、管理域名。
+To use CDNetworks Object Storage, you need a valid Access Key (AK) and Secret Key (SK) for signature authentication. You also need to configure your `uploadDomain` and `managementDomain` to perform file operations. This configuration only needs to be initialized once in your application.
 
-在获取到AK和SK等信息之后，您可以按照如下方式进行信息初始化：
+- Create a CDNetworks Object Storage account.
+- Log in to the CDNetworks Object Storage console. You can find your AK and SK under **Security Management** -> **Key Management**, and your domains under **Domain Query**.
 
-    import com.chinanetcenter.api.util.Config;
-    //1.初始化信息
-    String ak = "your access key";
-    String sk = "your secrete key";
-    String PUT_URL = "your uploadDomain";
-    String GET_URL = "your downloadDomain";
-    String MGR_URL = "your mgrDomain";
-    Config.init(ak,sk,PUT_URL,GET_URL,MGR_URL);
+After obtaining your credentials, initialize the configuration as follows:
 
-#### 文件上传
-1. returnUrl和callbackUrl不能同时指定。
-2. 若文件大小超过20M，建议使用分片上传
-3. 云存储提供的上传域名为普通域名，若对上传速度较为敏感，有要求的客户建议采用网宿上传加速服务。
-4. SDK支持自动识别文件类型（参考demo uploadFileForAutoMimeType方法）
+Java
 
-文件上传根据使用场景的不同分为三种模式：普通上传，回调上传，通知上传。上传方式可根据文件大小选择普通的表单上传或者分片上传。
-1. 普通上传：用户在上传文件后，上传返回结果由云存储平台统一控制。
-2. 回调上传：用户上传文件后，对返回给客户端的信息进行自定义。需要启用上传策略数据的callbackUrl参数,而callbackBody参数可选（建议使用该参数）。
-3. 通知上传：用户在上传文件的同时，提交文件处理指令（包括视频转码，图片水印，图片缩放等操作）。需要启用上传策略数据的persistentOps参数和persistentNotifyUrl参数。
+# 
 
+`import com.chinanetcenter.api.util.Config;
 
-##### 普通表单上传
-**范例：**
-```
-import com.chinanetcenter.api.entity.HttpClientResult;
+// 1. Initialize configuration
+String ak = "your access key";
+String sk = "your secrete key";
+String PUT_URL = "your uploadDomain";
+String GET_URL = "your downloadDomain";
+String MGR_URL = "your mgrDomain";
+Config.init(ak,sk,PUT_URL,GET_URL,MGR_URL);`
+
+### File Upload
+
+1. `returnUrl` and `callbackUrl` cannot be specified at the same time.
+2. For files larger than 20 MB, we recommend using multipart upload.
+3. The provided upload domain is a standard domain. For customers sensitive to upload speed, we recommend using CDNetworks' upload acceleration service.
+4. The SDK supports automatic MIME type detection (see the `uploadFileForAutoMimeType` method in the demo).
+
+There are three upload modes for different scenarios. You can choose between simple form upload or multipart upload based on the file size.
+
+1. **Standard Upload**: After the file is uploaded, the response is controlled by the Object Storage platform.
+2. **Callback Upload**: Customize the information returned to the client after the file is uploaded. This requires setting the `callbackUrl` parameter in the upload policy. The `callbackBody` parameter is optional but recommended.
+3. **Notification Upload**: Submit file processing commands (such as video transcoding, image watermarking, or image resizing) at the time of upload. This requires setting the `persistentOps` and `persistentNotifyUrl` parameters in the upload policy.
+
+### Simple Form Upload
+
+**Example:**
+
+Java
+
+# 
+
+`import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.entity.PutPolicy;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
@@ -87,7 +106,8 @@ public class UploadDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain,需要添加http://
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
          */
         Config.PUT_URL = "your uploadDomain";
         String bucketName = "your-bucket";
@@ -95,31 +115,31 @@ public class UploadDemo {
         String fileKeyWithFolder = "folder/test.JPG";
         String srcFilePath = "D:\\testfile\\1m.JPG";
         UploadDemo demo = new UploadDemo();
-	//上传本地文件
-	//普通上传
+        // Upload a local file
+        // Standard upload
         demo.uploadFile(bucketName, fileKey, srcFilePath);
-	
-	//上传后需要回调、返回信息。指定文件夹
+
+        // Upload with a callback and custom return body. Specify a folder.
         //demo.uploadReturnBody(bucketName, fileKeyWithFolder, srcFilePath);
-	
-	//上传指定文件类型，服务端默认按照文件后缀或者文件内容
+
+        // Upload with a specified MIME type. By default, the server determines the type from the file extension or content.
         //demo.uploadMimeType(bucketName, fileKey, srcFilePath);
-	
-	//上传文件后对文件做预处理
+
+        // Pre-process the file after uploading.
         //demo.uploadPersistent(bucketName, fileKey, srcFilePath);
-	
-	//自动识别文件类型
-	//demo.uploadFileForAutoMimeType(bucketName, fileKey, srcFilePath);
-	
-	//上传文件流
+
+        // Automatically detect the MIME type.
+        //demo.uploadFileForAutoMimeType(bucketName, fileKey, srcFilePath);
+
+        // Upload from an input stream.
         //FileInputStream in = new FileInputStream(new File(srcFilePath));
         //demo.uploadFile(bucketName, fileKey, in);
         //demo.uploadFileForAutoMimeType(bucketName, fileKey, in);
     }
 
     /**
-     * 通过本地的文件路径上传文件
-     * 默认覆盖上传
+     * Uploads a file from a local path.
+     * Overwrites by default.
      */
     public void uploadFile(String bucketName,String fileKey,String srcFilePath){
         try {
@@ -131,8 +151,8 @@ public class UploadDemo {
     }
 
     /**
-     * 通过文件流上传文件，方法里会关闭InputStream
-     * 默认覆盖上传
+     * Uploads a file from an InputStream. The stream will be closed by the method.
+     * Overwrites by default.
      */
     public void uploadFile(String bucketName,String fileKey,InputStream in){
         try {
@@ -144,13 +164,13 @@ public class UploadDemo {
     }
 
     /**
-     * 上传后需要回调、返回信息等，可通过PutPolicy指定上传策略
-     * callbackurl、callbackbody、returnurl 类似这个方法
+     * To use callbacks, custom return bodies, etc., you can specify an upload policy using PutPolicy.
+     * This method demonstrates setting a returnUrl, and the process is similar for callbackUrl and callbackBody.
      */
     public void uploadReturnBody(String bucketName,String fileKey,String srcFilePath){
         String returnBody = "key=$(key)&fname=$(fname)&fsize=$(fsize)&url=$(url)&hash=$(hash)&mimeType=$(mimeType)";
         PutPolicy putPolicy = new PutPolicy();
-        putPolicy.setOverwrite(1); //覆盖上传
+        putPolicy.setOverwrite(1); // Enable overwrite
         putPolicy.setDeadline(String.valueOf(DateUtil.nextDate(1,new Date()).getTime()));
         putPolicy.setReturnBody(returnBody);
         putPolicy.setScope(bucketName + ":" + fileKey);
@@ -163,8 +183,8 @@ public class UploadDemo {
     }
 
     /**
-     * 上传指定文件类型，服务端默认按照文件后缀或者文件内容
-     * 指定了mimeType，在下载的时候Content-type会指定该类型
+     * Upload with a specified MIME type. The server defaults to detecting from the file extension or content.
+     * If you specify a mimeType, it will be used as the Content-Type header for downloads.
      */
     public void uploadMimeType(String bucketName,String fileKey,String srcFilePath){
         PutPolicy putPolicy = new PutPolicy();
@@ -184,8 +204,8 @@ public class UploadDemo {
     }
 
     /**
-     * 上传文件后对该文件做转码
-     * 上传成功后返回persistentId应答，可以通过这个id去查询转码情况
+     * Transcodes the file after upload.
+     * On successful upload, a persistentId is returned, which can be used to query the transcoding status.
      */
     public void uploadPersistent(String bucketName,String fileKey,String srcFilePath){
         PutPolicy putPolicy = new PutPolicy();
@@ -193,8 +213,8 @@ public class UploadDemo {
         putPolicy.setOverwrite(1);
         putPolicy.setDeadline(String.valueOf(DateUtil.nextDate(1, new Date()).getTime()));
         putPolicy.setScope(bucketName + ":" + fileKey);
-        putPolicy.setPersistentOps("imageMogr2/jpg/crop/500x500/gravity/CENTER/lowpoly/1|saveas/ZnV5enRlc3Q4Mi0wMDE6ZG9fY3J5c3RhbGxpemVfZ3Jhdml0eV9jZW50ZXJfMTQ2NTkwMDg0Mi5qcGc="); // 设置视频转码操作
-        putPolicy.setPersistentNotifyUrl("http://demo1/notifyUrl"); // 设置转码后回调的接口
+        putPolicy.setPersistentOps("imageMogr2/jpg/crop/500x500/gravity/CENTER/lowpoly/1|saveas/ZnV5enRlc3Q4Mi0wMDE6ZG9fY3J5c3RhbGxpemVfZ3Jhdml0eV9jZW50ZXJfMTQ2NTkwMDg0Mi5qcGc="); // Set the video transcoding operation
+        putPolicy.setPersistentNotifyUrl("http://demo1/notifyUrl"); // Set the callback URL to be notified upon completion of transcoding
         putPolicy.setReturnBody(returnBody);
         try {
             HttpClientResult result = fileUploadManage.upload(bucketName,fileKey,srcFilePath,putPolicy);
@@ -203,38 +223,42 @@ public class UploadDemo {
             e.printStackTrace();
         }
     }
-	/**
-	 * 通过本地的文件路径上传文件,会自动识别文件类型
-	 * 默认覆盖上传
-	 */
-	public void uploadFileForAutoMimeType(String bucketName, String fileKey, String srcFilePath) {
-		try {
-			HttpClientResult result = fileUploadManage.uploadForAutoMimeType(bucketName, fileKey, srcFilePath);
-			System.out.println(result.getStatus() + ":" + result.getResponse());
-		} catch (WsClientException e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * Uploads a file from a local path and automatically detects the MIME type.
+     * Overwrites by default.
+     */
+    public void uploadFileForAutoMimeType(String bucketName, String fileKey, String srcFilePath) {
+        try {
+            HttpClientResult result = fileUploadManage.uploadForAutoMimeType(bucketName, fileKey, srcFilePath);
+            System.out.println(result.getStatus() + ":" + result.getResponse());
+        } catch (WsClientException e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * 通过文件流上传文件，方法里会关闭InputStream，会自动识别文件类型
-	 * 默认覆盖上传
-	 */
-	public void uploadFileForAutoMimeType(String bucketName, String fileKey, InputStream in) {
-		try {
-			HttpClientResult result = fileUploadManage.uploadForAutoMimeType(bucketName, fileKey, in);
-			System.out.println(result.getStatus() + ":" + result.getResponse());
-		} catch (WsClientException e) {
-			e.printStackTrace();
-		}
-	}
-}
-```
+    /**
+     * Uploads a file from an InputStream and automatically detects the MIME type. The stream will be closed by the method.
+     * Overwrites by default.
+     */
+    public void uploadFileForAutoMimeType(String bucketName, String fileKey, InputStream in) {
+        try {
+            HttpClientResult result = fileUploadManage.uploadForAutoMimeType(bucketName, fileKey, in);
+            System.out.println(result.getStatus() + ":" + result.getResponse());
+        } catch (WsClientException e) {
+            e.printStackTrace();
+        }
+    }
+}`
 
-##### 分片上传
-**范例：**
-```
-import com.chinanetcenter.api.entity.PutPolicy;
+### Multipart Upload
+
+**Example:**
+
+Java
+
+# 
+
+`import com.chinanetcenter.api.entity.PutPolicy;
 import com.chinanetcenter.api.entity.SliceUploadHttpResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.sliceUpload.BaseBlockUtil;
@@ -259,27 +283,31 @@ public class SliceUploadDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain,需要添加http://
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
          */
         Config.PUT_URL = "your uploadDomain";
         String bucketName = "your-bucket";
         String fileKey = "java-sdk/com.toycloud.MeiYe.apk";
 
         String srcFilePath = "D:\\testfile\\test001\\com.toycloud.MeiYe.apk";
-	
-	/**
-	 * 设置每一片大小为4M，减少上传请求。如果网络环境不好不建议设置改参数或者设置成较小的值，避免超时的情况。该参数默认值为256KB
-	 */
+
+        /**
+         * Set the chunk size to 4MB to reduce the number of upload requests. 
+         * If you are on an unstable network, we do not recommend changing this parameter or suggest setting it to a smaller value to avoid timeouts. The default value is 256KB.
+         */
         BaseBlockUtil.CHUNK_SIZE = 4 * 1024 * 1024;
-	
-	/**
-	 * 设置块上传并发数，加快上传速度。如果网络环境不好不建议设置改参数或者设置成较小的值，避免超时的情况。该参数默认值为1
-	 */
-	BaseBlockUtil.THREAD_NUN = 5；
+
+        /**
+         * Set the number of concurrent block uploads to speed up the process.
+         * If you are on an unstable network, we do not recommend changing this parameter or suggest setting it to a smaller value to avoid timeouts. The default value is 1.
+         */
+        BaseBlockUtil.THREAD_NUN = 5;
         SliceUploadDemo demo = new SliceUploadDemo();
         demo.sliceUpload(bucketName,fileKey,srcFilePath);
-		demo.sliceUploadForAutoMimeType(bucketName, fileKey, srcFilePath);
-        /**  第二种方式，key不写到scope里，而是从head指定 用于同一个token可以上传多个文件
+        demo.sliceUploadForAutoMimeType(bucketName, fileKey, srcFilePath);
+        /** // Second method: Do not include the key in the scope. Instead, specify it in the header.
+             // This allows using the same token to upload multiple files.
         String fileKey2 = "java-sdk/com.toycloud.MeiYe2.apktest";
         String mimeType = "application/vnd.android.package-archive";
         demo.sliceUpload(bucketName,fileKey2,srcFilePath,mimeType);
@@ -308,36 +336,37 @@ public class SliceUploadDemo {
         headMap.put("key", EncodeUtils.urlsafeEncode(fileKey));
         sliceUploadResumable.execUpload(bucketName, fileKey, filePath, putPolicy, null, jsonObjectRet,headMap);
     }
-	/**
-	 * 分片上传，会自动识别文件类型
-	 *
-	 * @param bucketName
-	 * @param fileKey
-	 * @param filePath
-	 */
-	public void sliceUploadForAutoMimeType(final String bucketName, final String fileKey, final String filePath) {
-		PutPolicy putPolicy = new PutPolicy();
-		putPolicy.setScope(bucketName + ":" + fileKey);
-		putPolicy.setOverwrite(1);
-		putPolicy.setDeadline(String.valueOf(DateUtil.nextDate(1, new Date()).getTime()));
-		JSONObjectRet jsonObjectRet = getJSONObjectRet(bucketName, fileKey, filePath);
-		SliceUploadResumable sliceUploadResumable = new SliceUploadResumable();
-		sliceUploadResumable.execUploadForAutoMimeType(bucketName, fileKey, filePath, putPolicy, null, jsonObjectRet);
-	}
+    /**
+     * Performs a multipart upload and automatically detects the MIME type.
+     *
+     * @param bucketName
+     * @param fileKey
+     * @param filePath
+     */
+    public void sliceUploadForAutoMimeType(final String bucketName, final String fileKey, final String filePath) {
+        PutPolicy putPolicy = new PutPolicy();
+        putPolicy.setScope(bucketName + ":" + fileKey);
+        putPolicy.setOverwrite(1);
+        putPolicy.setDeadline(String.valueOf(DateUtil.nextDate(1, new Date()).getTime()));
+        JSONObjectRet jsonObjectRet = getJSONObjectRet(bucketName, fileKey, filePath);
+        SliceUploadResumable sliceUploadResumable = new SliceUploadResumable();
+        sliceUploadResumable.execUploadForAutoMimeType(bucketName, fileKey, filePath, putPolicy, null, jsonObjectRet);
+    }
 
     public JSONObjectRet getJSONObjectRet(final String bucketName,final String fileKey,final String filePath){
         return new JSONObjectRet() {
             /**
-             * 文件上传成功后会回调此方法
-             * 校验下上传文件的hash和本地文件的hash是否一致，不一致可能本地文件被修改过
+             * This method is called back upon successful file upload.
+             * Verify that the hash of the uploaded file matches the hash of the local file.
+             * A mismatch may indicate the local file has been modified.
              */
             @Override
             public void onSuccess(JsonNode obj) {
                 File fileHash = new File(filePath);
-                String eTagHash = WetagUtil.getEtagHash(fileHash.getParent(), fileHash.getName());// 根据文件内容计算hash
+                String eTagHash = WetagUtil.getEtagHash(fileHash.getParent(), fileHash.getName());// Calculate the hash based on file content
                 SliceUploadHttpResult result = new SliceUploadHttpResult(obj);
                 if (eTagHash.equals(result.getHash())) {
-                    System.out.println("上传成功");
+                    System.out.println("Upload successful");
                 } else {
                     System.out.println("hash not equal,eTagHash:" + eTagHash + " ,hash:" + result.getHash());
                 }
@@ -348,7 +377,7 @@ public class SliceUploadDemo {
                 System.out.println(new String(body));
             }
 
-            // 文件上传失败回调此方法
+            // This method is called back on upload failure.
             @Override
             public void onFailure(Exception ex) {
                 if (ex instanceof WsClientException) {
@@ -357,19 +386,19 @@ public class SliceUploadDemo {
                 }else {
                     ex.printStackTrace();
                 }
-                System.out.println("上传出错，" + ex.getMessage());
+                System.out.println("Upload error, " + ex.getMessage());
             }
 
-            // 进度条展示，每上传成功一个块回调此方法
+            // For progress display, this method is called back after each block is successfully uploaded.
             @Override
             public void onProcess(long current, long total) {
                 System.out.printf("%s\r", current * 100 / total + " %");
             }
 
             /**
-             * 持久化，断点续传时把进度信息保存，下次再上传时把JSONObject赋值到PutExtra
-             * sdk默认把信息保存到磁盘文件，如果有需要请自己保存到db
-             * 下次再续传的时候把值赋值到PutExtra参数里
+             * For resumable uploads, persist the progress information.
+             * By default, the SDK saves this information to a local file. If needed, you can save it to a database yourself.
+             * When resuming the upload, assign the saved value to the PutExtra parameter.
              */
             @Override
             public void onPersist(JsonNode obj) {
@@ -377,17 +406,21 @@ public class SliceUploadDemo {
             }
         };
     }
-}
-```
+}`
 
-#### 资源管理
-对存储在网宿云存储上的文件进行处理，包括删除、列举资源等。
+### Resource Management
 
-##### 删除文件
+Manage files stored in CDNetworks Object Storage, including operations like deleting, listing resources, etc.
 
-**范例：**
-```
-import com.chinanetcenter.api.entity.HttpClientResult;
+### Deleting a File
+
+**Example:**
+
+Java
+
+# 
+
+`import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
 import com.chinanetcenter.api.wsbox.OperationManager;
@@ -397,7 +430,8 @@ public class DeleteDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain,需要添加http://
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
          */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
@@ -410,15 +444,19 @@ public class DeleteDemo {
             e.printStackTrace();
         }
     }
-}
-```
+}`
 
-##### 获取文件信息
-获取一个文件的信息描述，包括文件名，文件大小，文件的ETag信息等
+### Getting File Information
 
-**范例：**
-```
-import com.chinanetcenter.api.entity.HttpClientResult;
+Retrieves metadata for a file, including its name, size, ETag, etc.
+
+**Example:**
+
+Java
+
+# 
+
+`import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
 import com.chinanetcenter.api.wsbox.OperationManager;
@@ -428,7 +466,8 @@ public class StatDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain,需要添加http://
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
          */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
@@ -441,15 +480,19 @@ public class StatDemo {
             e.printStackTrace();
         }
     }
-}
-```
+}`
 
-##### 列举资源
-列举指定空间内的资源
+### Listing Resources
 
-**范例：**
-```
-import com.chinanetcenter.api.entity.FileListObject;
+Lists the resources within a specified bucket.
+
+**Example:**
+
+Java
+
+# 
+
+`import com.chinanetcenter.api.entity.FileListObject;
 import com.chinanetcenter.api.entity.FileMessageObject;
 import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
@@ -465,7 +508,8 @@ public class ListDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain,需要添加http://
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
          */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
@@ -506,14 +550,19 @@ public class ListDemo {
             }
         }
     }
-}
-```
-##### 复制资源
-将指定资源复制为新命名的资源。如果目标空间存在同名资源，不会覆盖。
+}`
 
-**范例：**
-```
-import com.chinanetcenter.api.entity.HttpClientResult;
+### Copying a Resource
+
+Copies a specified resource to a new resource with a different name. If a resource with the target name already exists, it will not be overwritten.
+
+**Example:**
+
+Java
+
+# 
+
+`import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
 import com.chinanetcenter.api.wsbox.OperationManager;
@@ -523,7 +572,8 @@ public class CopyDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain,需要添加http://
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
          */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
@@ -538,15 +588,19 @@ public class CopyDemo {
             e.printStackTrace();
         }
     }
-}
-```
+}`
 
-##### 移动资源
-将源空间的指定资源移动到目标空间，或在同一空间内对资源重命名。如果目标空间存在同名资源，不会覆盖。
+### Moving a Resource
 
-**范例：**
-```
-import com.chinanetcenter.api.entity.HttpClientResult;
+Moves a resource to a different bucket or renames it within the same bucket. If a resource with the target name already exists, it will not be overwritten.
+
+**Example:**
+
+Java
+
+# 
+
+`import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
 import com.chinanetcenter.api.wsbox.OperationManager;
@@ -556,7 +610,8 @@ public class MoveDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain,需要添加http://
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
          */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
@@ -571,15 +626,19 @@ public class MoveDemo {
             e.printStackTrace();
         }
     }
-}
-```
+}`
 
-##### 更新镜像资源
-对于设置了镜像存储的空间，提供从镜像源站抓取指定资源并存储到该空间中的功能。 如果该空间中已存在同名资源，则会被镜像源站的资源覆盖。
+### Updating a Mirrored Resource
 
-**范例：**
-```
-import com.chinanetcenter.api.entity.HttpClientResult;
+For buckets with mirroring configured, this feature allows you to fetch a specific resource from the origin and store it in the bucket. If a resource with the same name already exists in the bucket, it will be overwritten by the resource from the origin.
+
+**Example:**
+
+Java
+
+# 
+
+`import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
 import com.chinanetcenter.api.wsbox.OperationManager;
@@ -591,7 +650,8 @@ public class PreFetchDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain,需要添加http://
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
          */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
@@ -600,8 +660,8 @@ public class PreFetchDemo {
 
     public void prefetch(String bucketName) {
         OperationManager fileManageCommand = new OperationManager();
-        String fileName1 = "testPreFetch1.png"; // 文件名称
-        String fileName2 = "testPreFetch2.png"; // 文件名称
+        String fileName1 = "testPreFetch1.png"; // File name
+        String fileName2 = "testPreFetch2.png"; // File name
         ArrayList<String> fileKeys = new ArrayList<String>();
         fileKeys.add(fileName1);
         fileKeys.add(fileName2);
@@ -613,14 +673,19 @@ public class PreFetchDemo {
             e.printStackTrace();
         }
     }
-}
-```
-#### 音视频操作
-提供音视频处理功能，包括：转码转封装、音视频拼接等操作。具体处理参数详见[音视频处理Ops参数格式](#document/API/Appendix/fopsParam#音视频处理)
+}`
 
-**范例：**
-```
-import com.chinanetcenter.api.entity.HttpClientResult;
+### Audio/Video Processing
+
+Provides audio and video processing features, including transcoding, transmuxing, and concatenation. For detailed processing parameters, please refer to the [Audio/Video Processing Ops Parameter Format](https://www.google.com/search?q=%23document/API/Appendix/fopsParam%23%E9%9F%B3%E8%A7%86%E9%A2%91%E5%A4%84%E7%90%86).
+
+**Example:**
+
+Java
+
+# 
+
+`import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
 import com.chinanetcenter.api.util.EncodeUtils;
@@ -631,18 +696,20 @@ public class FopsDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain,需要添加http://
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
          */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
         String fileKey = "java-sdk/10m2.mp4";
-        //设置转码操作参数
+        // Set transcoding operation parameters
         String fops = "avthumb/mp4/s/640x360/vb/1.25m";
-        //可以对转码后的文件进行使用saveas参数自定义命名，
-        //也可以不指定,会默认命名并保存在当前空间 对 目标Bucket_Name:自定义文件key 做base64。
+        // You can use the 'saveas' parameter to specify a custom name for the transcoded file.
+        // If not specified, a default name will be used, and the file will be saved in the current bucket. 
+        // The 'saveas' value is a Base64 encoding of 'Target_Bucket_Name:Custom_File_Key'.
         String saveAsKey = EncodeUtils.urlsafeEncode(bucketName + ":1.256m.jpg");
         fops += "|saveas/" + saveAsKey;
-        String notifyURL = "http://demo1/notifyUrl";  //通知地址，转码成功后会回调此地址
+        String notifyURL = "http://demo1/notifyUrl";  // Notification URL. This URL will be called back upon successful transcoding.
         String force = "1";
         String separate = "1";
         FopsDemo demo = new FopsDemo();
@@ -659,14 +726,19 @@ public class FopsDemo {
             e.printStackTrace();
         }
     }
-}
-```
-#### 抓取资源
-提供从指定URL抓取资源，并存储到指定空间。
+}`
 
-**范例：**
-```
-import com.chinanetcenter.api.entity.FmgrParam;
+### Fetching a Remote Resource
+
+Fetches a resource from a specified URL and stores it in a designated bucket.
+
+**Example:**
+
+Java
+
+# 
+
+`import com.chinanetcenter.api.entity.FmgrParam;
 import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
@@ -680,7 +752,8 @@ public class FmgrFetchDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain,需要添加http://
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
          */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
@@ -691,15 +764,15 @@ public class FmgrFetchDemo {
             fmgrParam.setBucket(bucketName);
             fmgrParam.setFetchURL("https://wcs.chinanetcenter.com/indexNew/image/pic1.jpg");
             fmgrParam.setFileKey("indexNew/image/pic1.jpg");
-	    fmgrParam.putExtParams("fetchTS", "0");
+            fmgrParam.putExtParams("fetchTS", "0");
             list.add(fmgrParam);
             FmgrParam fmgrParam2 = new FmgrParam();
             fmgrParam2.setBucket(bucketName);
             fmgrParam2.setFetchURL("https://wcs.chinanetcenter.com/indexNew/image/pic2.m3u8");
             fmgrParam2.setFileKey("indexNew/image/pic2.m3u8");
-	    fmgrParam.putExtParams("fetchTS", "0");
+            fmgrParam.putExtParams("fetchTS", "0");
             list.add(fmgrParam2);
-            String notifyURL = "http://demo1/notifyUrl";  //通知地址，转码成功后会回调此地址
+            String notifyURL = "http://demo1/notifyUrl";  // Notification URL. This URL will be called back upon successful processing.
             String force = "1";
             String separate = "1";
             HttpClientResult result = fileManageCommand.fmgrFetch(list, notifyURL, force, separate);
@@ -708,5 +781,4 @@ public class FmgrFetchDemo {
             e.printStackTrace();
         }
     }
-}
-```
+}`
