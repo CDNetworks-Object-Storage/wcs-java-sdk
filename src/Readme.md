@@ -1,4 +1,4 @@
-## wcs-java-sdk
+# wcs-java-sdk
 
 This Java SDK for CDNetworks Object Storage is built on our public API specification and supports Java 1.6 and higher.
 
@@ -20,19 +20,20 @@ This Java SDK for CDNetworks Object Storage is built on our public API specifica
     - [Audio/Video Processing](https://www.google.com/search?q=%23audiovideo-processing)
     - [Fetching a Remote Resource](https://www.google.com/search?q=%23fetching-a-remote-resource)
 
-### User Guide
+## User Guide
 
 ### Setting up the Development Environment
 
-- **Add the dependency in your Maven project:**XML
+- **Add the dependency in your Maven project:**
     
-    # 
-    
-    `<dependency>
+    ```
+    <dependency>
         <groupId>com.chinanetcenter.wcs.sdk</groupId>
         <artifactId>wcs-java-sdk</artifactId>
         <version>2.0.x</version>
-    </dependency>`
+    </dependency>
+    
+    ```
     
 - **Using the JAR file:** [Download JARs](https://wcsd.chinanetcenter.com/sdk/cnc-java-sdk-wcs.zip)
     
@@ -48,11 +49,8 @@ To use CDNetworks Object Storage, you need a valid Access Key (AK) and Secret Ke
 
 After obtaining your credentials, initialize the configuration as follows:
 
-Java
-
-# 
-
-`import com.chinanetcenter.api.util.Config;
+```
+import com.chinanetcenter.api.util.Config;
 
 // 1. Initialize configuration
 String ak = "your access key";
@@ -60,7 +58,9 @@ String sk = "your secrete key";
 String PUT_URL = "your uploadDomain";
 String GET_URL = "your downloadDomain";
 String MGR_URL = "your mgrDomain";
-Config.init(ak,sk,PUT_URL,GET_URL,MGR_URL);`
+Config.init(ak,sk,PUT_URL,GET_URL,MGR_URL);
+
+```
 
 ### File Upload
 
@@ -79,11 +79,8 @@ There are three upload modes for different scenarios. You can choose between sim
 
 **Example:**
 
-Java
-
-# 
-
-`import com.chinanetcenter.api.entity.HttpClientResult;
+```
+import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.entity.PutPolicy;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
@@ -248,17 +245,16 @@ public class UploadDemo {
             e.printStackTrace();
         }
     }
-}`
+}
+
+```
 
 ### Multipart Upload
 
 **Example:**
 
-Java
-
-# 
-
-`import com.chinanetcenter.api.entity.PutPolicy;
+```
+import com.chinanetcenter.api.entity.PutPolicy;
 import com.chinanetcenter.api.entity.SliceUploadHttpResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.sliceUpload.BaseBlockUtil;
@@ -293,7 +289,7 @@ public class SliceUploadDemo {
         String srcFilePath = "D:\\testfile\\test001\\com.toycloud.MeiYe.apk";
 
         /**
-         * Set the chunk size to 4MB to reduce the number of upload requests. 
+         * Set the chunk size to 4MB to reduce the number of upload requests.
          * If you are on an unstable network, we do not recommend changing this parameter or suggest setting it to a smaller value to avoid timeouts. The default value is 256KB.
          */
         BaseBlockUtil.CHUNK_SIZE = 4 * 1024 * 1024;
@@ -406,7 +402,9 @@ public class SliceUploadDemo {
             }
         };
     }
-}`
+}
+
+```
 
 ### Resource Management
 
@@ -416,11 +414,8 @@ Manage files stored in CDNetworks Object Storage, including operations like dele
 
 **Example:**
 
-Java
-
-# 
-
-`import com.chinanetcenter.api.entity.HttpClientResult;
+```
+import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
 import com.chinanetcenter.api.wsbox.OperationManager;
@@ -444,7 +439,9 @@ public class DeleteDemo {
             e.printStackTrace();
         }
     }
-}`
+}
+
+```
 
 ### Getting File Information
 
@@ -452,11 +449,8 @@ Retrieves metadata for a file, including its name, size, ETag, etc.
 
 **Example:**
 
-Java
-
-# 
-
-`import com.chinanetcenter.api.entity.HttpClientResult;
+```
+import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
 import com.chinanetcenter.api.wsbox.OperationManager;
@@ -480,7 +474,9 @@ public class StatDemo {
             e.printStackTrace();
         }
     }
-}`
+}
+
+```
 
 ### Listing Resources
 
@@ -488,11 +484,8 @@ Lists the resources within a specified bucket.
 
 **Example:**
 
-Java
-
-# 
-
-`import com.chinanetcenter.api.entity.FileListObject;
+```
+import com.chinanetcenter.api.entity.FileListObject;
 import com.chinanetcenter.api.entity.FileMessageObject;
 import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
@@ -550,7 +543,9 @@ public class ListDemo {
             }
         }
     }
-}`
+}
+
+```
 
 ### Copying a Resource
 
@@ -558,11 +553,8 @@ Copies a specified resource to a new resource with a different name. If a resour
 
 **Example:**
 
-Java
-
-# 
-
-`import com.chinanetcenter.api.entity.HttpClientResult;
+```
+import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
 import com.chinanetcenter.api.wsbox.OperationManager;
@@ -588,7 +580,9 @@ public class CopyDemo {
             e.printStackTrace();
         }
     }
-}`
+}
+
+```
 
 ### Moving a Resource
 
@@ -596,11 +590,8 @@ Moves a resource to a different bucket or renames it within the same bucket. If 
 
 **Example:**
 
-Java
-
-# 
-
-`import com.chinanetcenter.api.entity.HttpClientResult;
+```
+import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
 import com.chinanetcenter.api.wsbox.OperationManager;
@@ -626,7 +617,9 @@ public class MoveDemo {
             e.printStackTrace();
         }
     }
-}`
+}
+
+```
 
 ### Updating a Mirrored Resource
 
@@ -634,11 +627,8 @@ For buckets with mirroring configured, this feature allows you to fetch a specif
 
 **Example:**
 
-Java
-
-# 
-
-`import com.chinanetcenter.api.entity.HttpClientResult;
+```
+import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
 import com.chinanetcenter.api.wsbox.OperationManager;
@@ -673,19 +663,18 @@ public class PreFetchDemo {
             e.printStackTrace();
         }
     }
-}`
+}
+
+```
 
 ### Audio/Video Processing
 
-Provides audio and video processing features, including transcoding, transmuxing, and concatenation. For detailed processing parameters, please refer to the [Audio/Video Processing Ops Parameter Format](https://www.google.com/search?q=%23document/API/Appendix/fopsParam%23%E9%9F%B3%E8%A7%86%E9%A2%91%E5%A4%84%E7%90%86).
+Provides audio and video processing features, including transcoding, transmuxing, and concatenation. For detailed processing parameters, please refer to the [Audio/Video Processing Ops Parameter Format](https://www.google.com/search?q=https://www.cdnetworks.com/document/API/Appendix/fopsParam%23%E9%9F%B3%E8%A7%86%E9%A2%91%E5%A4%84%E7%90%86).
 
 **Example:**
 
-Java
-
-# 
-
-`import com.chinanetcenter.api.entity.HttpClientResult;
+```
+import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
 import com.chinanetcenter.api.util.EncodeUtils;
@@ -705,7 +694,7 @@ public class FopsDemo {
         // Set transcoding operation parameters
         String fops = "avthumb/mp4/s/640x360/vb/1.25m";
         // You can use the 'saveas' parameter to specify a custom name for the transcoded file.
-        // If not specified, a default name will be used, and the file will be saved in the current bucket. 
+        // If not specified, a default name will be used, and the file will be saved in the current bucket.
         // The 'saveas' value is a Base64 encoding of 'Target_Bucket_Name:Custom_File_Key'.
         String saveAsKey = EncodeUtils.urlsafeEncode(bucketName + ":1.256m.jpg");
         fops += "|saveas/" + saveAsKey;
@@ -726,7 +715,9 @@ public class FopsDemo {
             e.printStackTrace();
         }
     }
-}`
+}
+
+```
 
 ### Fetching a Remote Resource
 
@@ -734,11 +725,8 @@ Fetches a resource from a specified URL and stores it in a designated bucket.
 
 **Example:**
 
-Java
-
-# 
-
-`import com.chinanetcenter.api.entity.FmgrParam;
+```
+import com.chinanetcenter.api.entity.FmgrParam;
 import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.util.Config;
@@ -781,4 +769,6 @@ public class FmgrFetchDemo {
             e.printStackTrace();
         }
     }
-}`
+}
+
+```
