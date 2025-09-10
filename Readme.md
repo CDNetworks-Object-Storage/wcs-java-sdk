@@ -415,7 +415,7 @@ public class StatDemo {
 ##### List Resources
 List files in a specified bucket.
 
-**范例：**
+**Example**
 ```
 import com.chinanetcenter.api.entity.FileListObject;
 import com.chinanetcenter.api.entity.FileMessageObject;
@@ -575,7 +575,7 @@ public class PreFetchDemo {
     }
 }
 ```
-#### 音视频操作Audio/Video Proccessing
+#### Audio/Video Proccessing
 
 Object Storage provides audio and video proccessing, including transcoding, transmuxing, video splicing, audio splicing, etc.
 
