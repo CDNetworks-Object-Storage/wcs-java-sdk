@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStream;
 
 /**
- * HTTP返回结果<br>
- * status  HTTP状态码，比如200,500,404
- * response  返回应答信息
- * innerResponse 回调服务器返回的应答信息,json字符串
- * responseObject 回调服务器返回的Json
+ * HTTP return result<br>
+ * status HTTP status code, e.g., 200, 500, 404
+ * response Return response information
+ * innerResponse Response information returned by the callback server, JSON string
+ * responseObject JSON returned by the callback server
  * @version 1.0
  * @since 2014/02/14
  */
@@ -18,12 +18,12 @@ public class HttpClientResult {
     public String url;
 
     /**
-     * HTTP状态码
+     * HTTP status code
      */
     public int status;
 
     /**
-     * 提示信息
+     * Prompt message
      */
     public String response;
 

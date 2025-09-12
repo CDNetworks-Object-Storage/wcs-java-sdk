@@ -6,18 +6,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 上传策略工具类
+ * Upload Policy Tool Class
  */
 public class PutPolicyUtil {
 
     /**
-     * 解析输入的参数<br>
-     * 例如命令java -jar wcs-demo-1.0-SNAPSHOT-jar-with-dependencies.jar put testbucket0001 panda002.mp4 D:\Project\WCSdocs\对外接口资料\test.mp4 persistentOps/avthumb/flv/vb/1.25m;vframe/jpg/offset/0<br>
-     * 其中参数persistentOps/avthumb/flv/vb/1.25m;vframe/jpg/offset/0 会被解析为persistentOps/和avthumb/flv/vb/1.25m;vframe/jpg/offset/0两部分<br>
-     * 最终PutPolicy对象中的persistentOps属性会设置为avthumb/flv/vb/1.25m;vframe/jpg/offset/0<br>
-     * PutPolicy其他参数的解析类似上面这个例子<br>
+     * Parse the input parameters<br>
+     * The command is, for example: `java -jar wcs-demo-1.0-SNAPSHOT-jar-with-dependencies.jar put testbucket0001 panda002.mp4 D:\Project\WCSdocs\对外接口资料\test.mp4 persistentOps/avthumb/flv/vb/1.25m;vframe/jpg/offset/0`<br>
+     * The parameter `persistentOps/avthumb/flv/vb/1.25m;vframe/jpg/offset/0` will be parsed into two parts: `persistentOps/` and `avthumb/flv/vb/1.25m;vframe/jpg/offset/0`.<br>
+     * The `persistentOps` attribute in the final `PutPolicy` object will be set to `avthumb/flv/vb/1.25m;vframe/jpg/offset/0`.<br>
+     * The parsing of other parameters of PutPolicy is similar to the above example.<br>
      * @param args
-     * @return PutPolicy对象
+     * @return PutPolicy object
      */
     public static PutPolicy setArgs(String[] args) {
         PutPolicy putPolicy = new PutPolicy();
@@ -32,7 +32,7 @@ public class PutPolicyUtil {
             } else if (args[i].startsWith("returnUrl")) {
                 tmpstr = args[i].split("returnUrl=");
                 putPolicy.setReturnUrl(tmpstr[1]);
-            } else if (args[i].startsWith("e")) {//按秒计算
+            } else if (args[i].startsWith("e")) {//Calculated by the second
                 tmpstr = args[i].split("e=");
                 putPolicy.setDeadline(tmpstr[1]);
             } else if (args[i].startsWith("returnBody")) {

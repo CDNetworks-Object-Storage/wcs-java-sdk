@@ -9,7 +9,7 @@ import java.io.RandomAccessFile;
 
 /**
  * Created by fuyz on 2014/8/5.
- * 切片上传块对象属性
+ * Sliced upload block object properties
  */
 public class BlockObject {
 

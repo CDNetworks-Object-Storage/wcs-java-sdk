@@ -15,12 +15,12 @@ import java.util.Map;
 
 /**
  * Created by fuyz on 2016/9/2.
- * fgmr操作请求
+ * Fmgr operation request
  */
 public class FmgrFileManage {
 
     /**
-     * Fmgr任务查询
+     * Fmgr task query
      * https://wcs.chinanetcenter.com/document/API/Fmgr/status
      */
     public HttpClientResult fmgrStatus(String persistentId) throws WsClientException {
@@ -29,7 +29,7 @@ public class FmgrFileManage {
     }
 
     /**
-     * 抓取资源
+     * Fetches resources.
      * https://wcs.chinanetcenter.com/document/API/Fmgr/fetch
      */
     public HttpClientResult fmgrFetch(List<FmgrParam> fmgrList,String notifyUrl,String force,String separate) throws WsClientException {
@@ -78,7 +78,7 @@ public class FmgrFileManage {
     }
 
     /**
-     * 复制资源
+     * Copies resources.
      * https://wcs.chinanetcenter.com/document/API/Fmgr/copy
      */
     public HttpClientResult fmgrCopy(List<FmgrParam> fmgrList, String notifyUrl, String force, String separate) throws WsClientException {
@@ -124,7 +124,7 @@ public class FmgrFileManage {
     }
 
     /**
-     * 移动资源
+     * Moves resources.
      * https://wcs.chinanetcenter.com/document/API/Fmgr/move
      */
     public HttpClientResult fmgrMove(List<FmgrParam> fmgrList, String notifyUrl, String force, String separate) throws WsClientException {
@@ -170,7 +170,7 @@ public class FmgrFileManage {
     }
 
     /**
-     * 删除资源
+     * Deletes resources.
      * https://wcs.chinanetcenter.com/document/API/Fmgr/delete
      */
     public HttpClientResult fmgrDelete(List<FmgrParam> fmgrList, String notifyUrl, String force, String separate) throws WsClientException {
@@ -212,7 +212,7 @@ public class FmgrFileManage {
     }
 
     /**
-     * 按前缀删除资源
+     * Deletes resources by prefix.
      * https://wcs.chinanetcenter.com/document/API/Fmgr/deletePrefix
      */
     public HttpClientResult fmgrDeletePrefix(List<FmgrParam> fmgrList, String notifyUrl, String force, String separate) throws WsClientException {
@@ -251,7 +251,7 @@ public class FmgrFileManage {
     }
 
     /**
-     * 删除m3u8文件
+     * Deletes M3U8 files.
      * https://wcs.chinanetcenter.com/document/API/Fmgr/deletem3u8
      */
     public HttpClientResult fmgrDeleteM3U8(List<FmgrParam> fmgrList, String notifyUrl, String separate) throws WsClientException {
@@ -287,7 +287,7 @@ public class FmgrFileManage {
     }
 
     /**
-     * 批量修改文件保存期限
+     * Batch modification of file retention period.
      * https://wcs.chinanetcenter.com/document/API/Fmgr/setdeadline
      */
     public HttpClientResult fmgrSetdeadline(List<FmgrParam> fmgrList, String notifyUrl) throws WsClientException {

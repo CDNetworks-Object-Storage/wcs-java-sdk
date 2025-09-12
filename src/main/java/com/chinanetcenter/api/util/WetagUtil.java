@@ -10,17 +10,17 @@ import java.security.NoSuchAlgorithmException;
 import java.util.zip.CRC32;
 
 /**
- * 文件hash/etag工具
+ * File hash/etag utility
  * Created by xiexb on 2014/5/30.
  */
 public class WetagUtil {
     private static final int BLOCK_BITS = 22;
-    private static final int BLOCK_SIZE = 1 << BLOCK_BITS;//2^22 = 4M
-    private static final byte BYTE_LOW_4 = 0x16;//小于等于4M的文件在最前面拼上单个字节，值为0x16
-    private static final byte BYTE_OVER_4 = (byte) 0x96;//大于4M的文件在最前面拼上单个字节，值为0x96
+    private static final int BLOCK_SIZE = 1 << BLOCK_BITS;// 2^22 = 4MB
+    private static final byte BYTE_LOW_4 = 0x16;// For files less than or equal to 4MB, a single byte with value 0x16 is prepended.
+    private static final byte BYTE_OVER_4 = (byte) 0x96;// For files greater than 4MB, a single byte with value 0x96 is prepended.
 
     /**
-     * 计算文件块数，4M分块
+     * Calculates the number of file blocks, with 4MB chunking.
      *
      * @param fileLength
      * @return
@@ -30,7 +30,7 @@ public class WetagUtil {
     }
 
     /**
-     * 读取指定文件块数据Sha1
+     * Reads SHA-1 data for a specified file block.
      *
      * @param fis
      * @return
@@ -45,7 +45,7 @@ public class WetagUtil {
             while ((numRead = fis.read(buffer)) > 0) {
                 sha1.update(buffer, 0, numRead);
                 total += numRead;
-                if (total >= BLOCK_SIZE) {//每次最多读入4M
+                if (total >= BLOCK_SIZE) {// Reads up to 4MB at a time.
                     break;
                 }
             }
@@ -56,11 +56,8 @@ public class WetagUtil {
     }
 
     /**
-     * 获取hash/etag，根据File文件计算hash值
+     * Retrieves hash/etag, calculates hash value based on the File object.
      *
-     * @param file 文件
-     * @return
-     */
     public static String getEtagHash(File file) {
         String etagHash = null;
         BufferedInputStream fis = null;
@@ -69,20 +66,20 @@ public class WetagUtil {
                 byte[] ret = new byte[21];
                 long blockCount = blockCount(file.length());
                 fis = new BufferedInputStream(new FileInputStream(file));
-                if (blockCount <= 1) { // 文件块数小于等于1块
+                if (blockCount <= 1) { // The number of file blocks is less than or equal to 1 block.
                     MessageDigest sha1 = calSha1(fis);
                     if (null != sha1) {
                         byte[] input = sha1.digest();
                         ret[0] = BYTE_LOW_4;
-                        for (int i = 0; i < 20; ++i) {//SHA1算法位20字节
+                        for (int i = 0; i < 20; ++i) {// The SHA1 algorithm is 20 bytes.
                             ret[i + 1] = input[i];
                         }
                     }
-                } else {//将所有sha1值按切块顺序拼接
+                } else {// Concatenate all SHA1 values in chunk order.
                     byte[] rec = new byte[(int) blockCount * 20];
                     ret[0] = BYTE_OVER_4;
                     int i, cnt = 0;
-                    for (i = 0; i < blockCount; i++) {//每块文件分别计算sha1
+                    for (i = 0; i < blockCount; i++) {// Calculate SHA1 for each file block separately.
                         MessageDigest sha1 = calSha1(fis);
                         if (null != sha1) {
                             byte[] tmp = sha1.digest();
@@ -91,10 +88,10 @@ public class WetagUtil {
                             }
                         }
                     }
-                    MessageDigest sha1 = MessageDigest.getInstance("SHA-1");//对拼接好的数据再做sha1计算
+                    MessageDigest sha1 = MessageDigest.getInstance("SHA-1");// Then perform SHA-1 calculation on the concatenated data.
                     sha1.update(rec, 0, (int) blockCount * 20);
                     byte[] tmp = sha1.digest();
-                    for (i = 0; i < 20; ++i) {//在最前面拼上单个字节，值为0x96
+                    for (i = 0; i < 20; ++i) {// Prepend a single byte with the value 0x96.
                         ret[i + 1] = tmp[i];
                     }
                 }
@@ -117,10 +114,10 @@ public class WetagUtil {
     }
 
     /**
-     * 获取hash/etag，用于对未分块本地文件计算hash值
+     * Get hash/etag, used to calculate hash value for unchunked local files.
      *
-     * @param filePath 文件物理路径
-     * @param fileName 文件名
+     * @param filePath file physical path
+     * @param fileName file name
      * @return
      */
     public static String getEtagHash(String filePath, String fileName) {
@@ -129,10 +126,10 @@ public class WetagUtil {
     }
 
     /**
-     * 获取hash/etag，用于对未分块文件计算hash值
+     * Get hash/etag, used to calculate hash value for unchunked files.
      *
-     * @param fileInputStream 文件输入流
-     * @param fileLength      文件大小
+     * @param fileInputStream file input stream
+     * @param fileLength      file size
      * @return
      */
     public static String getEtagHash(InputStream fileInputStream, long fileLength) {
@@ -142,20 +139,20 @@ public class WetagUtil {
             byte[] ret = new byte[21];
             long blockCount = blockCount(fileLength);
             fis = new BufferedInputStream(fileInputStream);
-            if (blockCount <= 1) { // 文件块数小于等于1块
+            if (blockCount <= 1) { // The number of file blocks is less than or equal to 1 block.
                 MessageDigest sha1 = calSha1(fis);
                 if (null != sha1) {
                     byte[] input = sha1.digest();
                     ret[0] = BYTE_LOW_4;
-                    for (int i = 0; i < 20; ++i) {//SHA1算法位20字节
+                    for (int i = 0; i < 20; ++i) {// The SHA1 algorithm is 20 bytes.
                         ret[i + 1] = input[i];
                     }
                 }
-            } else {//将所有sha1值按切块顺序拼接
+            } else {// Concatenate all SHA1 values in chunk order.
                 byte[] rec = new byte[(int) blockCount * 20];
                 ret[0] = BYTE_OVER_4;
                 int i, cnt = 0;
-                for (i = 0; i < blockCount; i++) {//每块文件分别计算sha1
+                for (i = 0; i < blockCount; i++) {// Calculate SHA1 for each file block separately.
                     MessageDigest sha1 = calSha1(fis);
                     if (null != sha1) {
                         byte[] tmp = sha1.digest();
@@ -164,10 +161,10 @@ public class WetagUtil {
                         }
                     }
                 }
-                MessageDigest sha1 = MessageDigest.getInstance("SHA-1");//对拼接好的数据做再做sha1计算
+                MessageDigest sha1 = MessageDigest.getInstance("SHA-1");// Re-calculate SHA1 for the concatenated data.
                 sha1.update(rec, 0, (int) blockCount * 20);
                 byte[] tmp = sha1.digest();
-                for (i = 0; i < 20; ++i) {//在最前面拼上单个字节，值为0x96
+                for (i = 0; i < 20; ++i) {// Prepend a single byte with the value 0x96.
                     ret[i + 1] = tmp[i];
                 }
             }
@@ -188,9 +185,9 @@ public class WetagUtil {
     }
 
     /**
-     * 计算指定data的Sha1
+     * Calculate the SHA1 of the specified data.
      *
-     * @param data byte字节数组
+     * @param data byte array
      * @return
      */
     private static MessageDigest calSha1(byte[] data) {
@@ -205,9 +202,9 @@ public class WetagUtil {
     }
 
     /**
-     * 获取hash/etag，用于对已经分块好的文件分别计算每块hash值
+     * Obtain hash/etag, used to calculate the hash value for each block of a file that has already been chunked.
      *
-     * @param data 文件的byte字节数组
+     * @param data file's byte array
      * @return
      */
     public static String getEtagHash(byte[] data) {
@@ -218,7 +215,7 @@ public class WetagUtil {
             if (null != sha1) {
                 byte[] input = sha1.digest();
                 ret[0] = BYTE_LOW_4;
-                for (int i = 0; i < 20; ++i) {//SHA1算法位20字节
+                for (int i = 0; i < 20; ++i) {// The SHA1 algorithm is 20 bytes.
                     ret[i + 1] = input[i];
                 }
             }

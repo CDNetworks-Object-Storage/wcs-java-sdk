@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * 日期工具类
+ * Date Utility Class
  */
 public class DateUtil {
 
@@ -268,10 +268,10 @@ public class DateUtil {
     }
 
     /**
-     * 取指定日期的开始日期时间
+     * Get the start date and time of the specified date
      *
-     * @param date 待处理的日期
-     * @return 传入日期的开始时间
+     * @param date Date to be processed
+     * @return The start time of the input date
      */
     @SuppressWarnings("deprecation")
     public static Date getStartDate(Date date) {
@@ -310,26 +310,26 @@ public class DateUtil {
 
     public static long dateDiff(Date startTime, Date endTime, int type) {
         long result = 0;
-        long nd = 1000 * 24 * 60 * 60;// 一天的毫秒数
-        long nh = 1000 * 60 * 60;// 一小时的毫秒数
-        long nm = 1000 * 60;// 一分钟的毫秒数
-        long ns = 1000;// 一秒钟的毫秒数
+        long nd = 1000 * 24 * 60 * 60;// Number of milliseconds in a day
+        long nh = 1000 * 60 * 60;// The number of milliseconds in an hour.
+        long nm = 1000 * 60;// The number of milliseconds in one minute.
+        long ns = 1000;// The number of milliseconds in one second.
         long diff;
         try {
-            // 获得两个时间的毫秒时间差异
+            // Get the millisecond time difference between two times
             diff = endTime.getTime() - startTime.getTime();
             switch (type) {
                 case Calendar.DATE:
-                    result = diff / nd;// 计算差多少天
+                    result = diff / nd;// Calculate the difference in days
                     break;
                 case Calendar.HOUR:
-                    result = diff / nh;// 计算差多少小时
+                    result = diff / nh;// Calculate the difference in hours
                     break;
                 case Calendar.MINUTE:
-                    result = diff / nm;// 计算差多少分钟
+                    result = diff / nm;// Calculate the difference in minutes
                     break;
                 case Calendar.SECOND:
-                    result = diff / ns;// 计算差多少秒
+                    result = diff / ns;// Calculate the difference in seconds
                     break;
                 default:
                     break;

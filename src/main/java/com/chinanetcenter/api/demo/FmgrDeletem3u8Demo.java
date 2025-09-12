@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 用途描述：高级资源管理-删除m3u8文件
+ * Purpose: Advanced Resource Management - Delete M3U8 files
  * Created by chenql on 2018/4/3.
  */
 public class FmgrDeletem3u8Demo {
@@ -19,7 +19,7 @@ public class FmgrDeletem3u8Demo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain
+         * You can obtain uploadDomain and MgrDomain in the User Management Interface - Security Management - Domain Query.
          */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
@@ -36,7 +36,7 @@ public class FmgrDeletem3u8Demo {
             fmgrParam2.setDeletets("0");
             fmgrParam2.setFileKey("mytest2.m3u8");
             list.add(fmgrParam2);
-            String notifyURL = "http://demo1/notifyUrl";  //通知地址，转码成功后会回调此地址
+            String notifyURL = "http://demo1/notifyUrl";  // Notification address, this address will be called back after successful transcoding
             String separate = "1";
             HttpClientResult result = fileManageCommand.fmgrDeleteM3U8(list, notifyURL, separate);
             System.out.println(result.getStatus() + ":" + result.getResponse());

@@ -19,25 +19,25 @@ import java.util.concurrent.Executors;
 
 /**
  * Created by fuyz on 2014/8/18.
- * 分片上传
+ * Resumable Upload
  */
 public class SliceUploadResumable {
 
     /**
-     * 用户初始化ak和sk，sdk自己生成token
+     * Initializes AK (Access Key) and SK (Secret Key), SDK generates the token.
      */
     public void execUpload(String bucketName, String fileKey, String filePath, PutPolicy putPolicy, PutExtra putExtra, JSONObjectRet jsonObjectRet) {
         execUpload(bucketName,fileKey,filePath,putPolicy,putExtra,jsonObjectRet,null);
     }
     /**
-     * 用户初始化ak和sk，sdk自己生成token
+     * Initializes AK (Access Key) and SK (Secret Key), SDK generates the token.
      */
     public void execUpload(String bucketName, String fileKey, String filePath, PutPolicy putPolicy, PutExtra putExtra, JSONObjectRet jsonObjectRet,Map<String,String> headMap) {
         RandomAccessFile file = null;
         ExecutorService pool = null;
         try {
             if (BaseBlockUtil.BLOCK_SIZE < 4 * BaseBlockUtil.MB || (BaseBlockUtil.BLOCK_SIZE % (4 * BaseBlockUtil.MB)) != 0) {
-                jsonObjectRet.onFailure(new Exception("块大小应该为4M的整数倍!"));
+                jsonObjectRet.onFailure(new Exception("Block size must be a multiple of 4MB!"));
                 return;
             }
             file = new RandomAccessFile(filePath, "r");
@@ -95,7 +95,7 @@ public class SliceUploadResumable {
                 jsonObjectRet.onSuccess(result.toJSON());
             } else {
                 if (result.getStatus() == 412) {
-                    System.out.println(fileKey + " 此文件块有缺失，文件重新上传");
+                    System.out.println(fileKey + " This file block is missing; re-upload the file.");
                     putPolicy.setOverwrite(1);
                 }
                 putExtra.processes = null;
@@ -150,7 +150,7 @@ public class SliceUploadResumable {
         ExecutorService pool = null;
         try {
             if (BaseBlockUtil.BLOCK_SIZE < 4 * BaseBlockUtil.MB || (BaseBlockUtil.BLOCK_SIZE % (4 * BaseBlockUtil.MB)) != 0) {
-                jsonObjectRet.onFailure(new Exception("块大小应该为4M的整数倍!"));
+                jsonObjectRet.onFailure(new Exception("Block size must be a multiple of 4MB!"));
                 return;
             }
 
@@ -232,7 +232,7 @@ public class SliceUploadResumable {
                 jsonObjectRet.onSuccess(result.toJSON());
             } else {
                 if (result.getStatus() == 412) {
-                    System.out.println(fileKey + " 此文件块有缺失，文件重新上传");
+                    System.out.println(fileKey + " This file block is missing; re-upload the file.");
                     putPolicy.setOverwrite(1);
                 }
                 putExtra.streamProcesses = null;

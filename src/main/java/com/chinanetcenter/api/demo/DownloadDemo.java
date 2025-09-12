@@ -5,7 +5,7 @@ import com.chinanetcenter.api.exception.WsClientException;
 import com.chinanetcenter.api.wsbox.OperationManager;
 
 /**
- * 下载文件
+ * Download file
  */
 public class DownloadDemo {
     public static void main(String[] args) {

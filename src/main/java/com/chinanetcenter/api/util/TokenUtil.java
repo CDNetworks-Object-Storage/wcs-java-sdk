@@ -18,7 +18,7 @@ public class TokenUtil {
     }
 
     /**
-     * 获取上传的token
+     * Get upload token
      *
      * @param putPolicy
      * @return
@@ -27,65 +27,65 @@ public class TokenUtil {
         JsonMapper jsonMapper = JsonMapper.nonEmptyMapper();
         String putPolicyStr = jsonMapper.toJson(putPolicy);
         String encodePutPolicy = EncodeUtils.urlsafeEncode(putPolicyStr);
-        String singSk = EncryptUtil.sha1Hex(encodePutPolicy.getBytes(), Config.SK);//签名
-        String skValue = EncodeUtils.urlsafeEncode(singSk);//Base64编码
+        String singSk = EncryptUtil.sha1Hex(encodePutPolicy.getBytes(), Config.SK);//signature
+        String skValue = EncodeUtils.urlsafeEncode(singSk);//Base64 encoding
         String uploadToken = Config.AK + ":" + skValue + ":" + encodePutPolicy;
         return uploadToken;
     }
 
 
     /**
-     * 获取删除的token
+     * Get delete token
      *
-     * @param bucketName 空间名称
-     * @param fileName   文件名称
+     * @param bucketName Bucket name
+     * @param fileName   File name
      * @return
      */
     public static String getDeleteToken(String bucketName, String fileName) {
         String encodedEntryURI = EncodeUtils.urlsafeEncodeString((bucketName + ":" + fileName).getBytes());
         String encodeDeletePath = "/delete/" + encodedEntryURI + "\n";
-        String signSk = EncryptUtil.sha1Hex(encodeDeletePath.getBytes(), Config.SK);//签名
-        String encodedSign = EncodeUtils.urlsafeEncode(signSk);//Base64编码
+        String signSk = EncryptUtil.sha1Hex(encodeDeletePath.getBytes(), Config.SK);//signature
+        String encodedSign = EncodeUtils.urlsafeEncode(signSk);//Base64 encoding
         String deleteToken = Config.AK + ":" + encodedSign;
         return deleteToken;
     }
 
     /**
-     * 获取前缀模糊删除的token
+     * Get token for prefix fuzzy deletion
      *
-     * @param bucketName 空间名称
-     * @param fileName   文件名称
+     * @param bucketName Bucket name
+     * @param fileName   File name
      * @return
      */
     public static String getDeletePrefixToken(String bucketName, String fileName) {
         String encodedEntryURI = EncodeUtils.urlsafeEncodeString((bucketName + ":" + fileName).getBytes());
-        String encodeDeletePath = "/deletePrefix/" + encodedEntryURI + "\n";
-        String signSk = EncryptUtil.sha1Hex(encodeDeletePath.getBytes(), Config.SK);//签名
-        String encodedSign = EncodeUtils.urlsafeEncode(signSk);//Base64编码
+                String encodeDeletePath = "/deletePrefix/" + encodedEntryURI + "\n";
+        String signSk = EncryptUtil.sha1Hex(encodeDeletePath.getBytes(), Config.SK);//signature
+        String encodedSign = EncodeUtils.urlsafeEncode(signSk);//Base64 encoding
         String deleteToken = Config.AK + ":" + encodedSign;
         return deleteToken;
     }
 
     /**
-     * 获取文件信息的token
+     * Get token for file information
      *
-     * @param bucketName 空间名称
-     * @param fileName 文件名称
+     * @param bucketName Bucket Name
+     * @param fileName File name
      * @return
      */
     public static String getStatToken(String bucketName, String fileName) {
         String encodedEntryURI = EncodeUtils.urlsafeEncodeString((bucketName + ":" + fileName).getBytes());
         String encodeDeletePath = "/stat/" + encodedEntryURI + "\n";
-        String signSk = EncryptUtil.sha1Hex(encodeDeletePath.getBytes(), Config.SK);//签名
-        String encodedSign = EncodeUtils.urlsafeEncode(signSk);//Base64编码
+        String signSk = EncryptUtil.sha1Hex(encodeDeletePath.getBytes(), Config.SK);//signature
+        String encodedSign = EncodeUtils.urlsafeEncode(signSk);//Base64 encoding
         String deleteToken = Config.AK + ":" + encodedSign;
         return deleteToken;
     }
 
     public static String getFileListToken(String listUrl) {
         listUrl += "\n";
-        String encodeDownloadUrl = EncryptUtil.sha1Hex(listUrl.getBytes(), Config.SK);//签名
-        String skValues = EncodeUtils.urlsafeEncode(encodeDownloadUrl);//Base64编码
+        String encodeDownloadUrl = EncryptUtil.sha1Hex(listUrl.getBytes(), Config.SK);// signature
+        String skValues = EncodeUtils.urlsafeEncode(encodeDownloadUrl);// Base64 encoding
         String listToken = Config.AK + ":" + skValues;
         return listToken;
     }

@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
 
 /**
  * Created by fuyz on 2014/8/5.
- * 块上传
+ * Block upload
  */
 public class BlockUpload extends BaseBlockUtil implements Callable {
 
@@ -30,7 +30,7 @@ public class BlockUpload extends BaseBlockUtil implements Callable {
 
 
     /**
-     * 块上传
+     * Block upload
      *
      * @return block ctx
      * @throws Exception
@@ -150,10 +150,10 @@ public class BlockUpload extends BaseBlockUtil implements Callable {
             }
         } else {
             if (blockObject.getData() != null) {
-                //流式上传
+                // Stream upload
                 long crc32 = crc32(blockObject.getData(), (int) blockObject.getStart(), len);
                 String checkSum = getMD5String(blockObject.getData(), (int) blockObject.getStart(), len);
-                // 上传的数据 CRC32 或md5校验不一致。
+                // The uploaded data's CRC32 or MD5 checksum is inconsistent.
                 if (result.getCrc32() != crc32 || !result.getChecksum().equals(checkSum)) {
                     if (time < TRIED_TIMES) {
                         return upload(url, len, time + 1);
@@ -162,7 +162,7 @@ public class BlockUpload extends BaseBlockUtil implements Callable {
                         throw new HttpException("406 inner block's crc32 do not match." + (result.response == null ? "" : result.response));
                     }
                 } else {
-                    //修改successLength和start的值
+                    // Modify the values of successLength and start
                     blockObject.addSuccessLength(len);
                     blockObject.setLastCtx(result.getCtx());
                     return result;
@@ -170,7 +170,7 @@ public class BlockUpload extends BaseBlockUtil implements Callable {
             } else {
                 long crc32 = buildCrc32(len);
                 String checkSum = getFileMD5String(len);
-                // 上传的数据 CRC32 或md5校验不一致。
+                // The uploaded data's CRC32 or MD5 checksum is inconsistent.
                 if (result.getCrc32() != crc32 || !result.getChecksum().equals(checkSum)) {
                     if (time < TRIED_TIMES) {
                         return upload(url, len, time + 1);

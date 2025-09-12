@@ -10,13 +10,13 @@ import com.chinanetcenter.api.util.JsonMapper;
 
 /**
  * Created by fuyz on 2015/7/29.
- * 获取文件的avinfo
+ * Retrieves the AV information of a file.
  */
 public class FileAvInfo {
 
     public static Avinfo getFileAvinfo(String fileKey) throws WsClientException {
         StringBuilder url = new StringBuilder(Config.GET_URL);
-        String encodeKey = EncodeUtils.escapeFileKey(fileKey);//进行编码
+        String encodeKey = EncodeUtils.escapeFileKey(fileKey);// Perform URL-safe encoding
         url.append("/").append(encodeKey);
         url.append("?op=avinfo");
         HttpClientResult result = HttpClientUtil.httpGet(url.toString(), null);

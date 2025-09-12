@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * Created by fuyz on 2016/8/30.
- * 上传demo
+ * Upload demo
  */
 public class UploadDemo {
     FileUploadManage fileUploadManage = new FileUploadManage();
@@ -27,7 +27,7 @@ public class UploadDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain
+         * You can obtain uploadDomain and MgrDomain in the User Management Interface - Security Management - Domain Query.
          */
         Config.PUT_URL = "your uploadDomain";
         String bucketName = "your-bucket";
@@ -44,8 +44,8 @@ public class UploadDemo {
     }
 
     /**
-     * 通过本地的文件路径上传文件
-     * 默认覆盖上传
+     * Upload file via local file path
+     * Default overwrite upload
      */
     public void uploadFile(String bucketName,String fileKey,String srcFilePath){
         try {
@@ -57,8 +57,8 @@ public class UploadDemo {
     }
 
     /**
-     * 通过文件流上传文件，方法里会关闭InputStream
-     * 默认覆盖上传
+     * Upload file via file stream, InputStream will be closed in the method
+     * Default overwrite upload
      */
     public void uploadFile(String bucketName,String fileKey,InputStream in){
         try {
@@ -70,13 +70,13 @@ public class UploadDemo {
     }
 
     /**
-     * 上传后需要回调、返回信息等，可通过PutPolicy指定上传策略
-     * callbackurl、callbackbody、returnurl 类似这个方法
+     * After uploading, if callback, return information, etc. are needed, upload policy can be specified through PutPolicy
+     * callbackurl, callbackbody, returnurl are similar to this method
      */
     public void uploadReturnBody(String bucketName,String fileKey,String srcFilePath){
         String returnBody = "key=$(key)&fname=$(fname)&fsize=$(fsize)&url=$(url)&hash=$(hash)&mimeType=$(mimeType)";
         PutPolicy putPolicy = new PutPolicy();
-        putPolicy.setOverwrite(1); //覆盖上传
+        putPolicy.setOverwrite(1); // Overwrite upload
         putPolicy.setDeadline(String.valueOf(DateUtil.nextDate(1,new Date()).getTime()));
         putPolicy.setReturnBody(returnBody);
         putPolicy.setScope(bucketName + ":" + fileKey);
@@ -89,8 +89,8 @@ public class UploadDemo {
     }
 
     /**
-     * 上传指定文件类型，服务端默认按照文件后缀或者文件内容
-     * 指定了mimeType，在下载的时候Content-type会指定该类型
+     * Upload specified file type, server defaults to file extension or file content
+     * If mimeType is specified, Content-type will be specified as this type when downloading
      */
     public void uploadMimeType(String bucketName,String fileKey,String srcFilePath){
         PutPolicy putPolicy = new PutPolicy();
@@ -110,8 +110,8 @@ public class UploadDemo {
     }
 
     /**
-     * 上传文件后对该文件做转码
-     * 上传成功后返回persistentId应答，可以通过这个id去查询转码情况
+     * Transcode the file after uploading
+     * After successful upload, persistentId response is returned, which can be used to query transcoding status
      */
     public void uploadPersistent(String bucketName,String fileKey,String srcFilePath){
         PutPolicy putPolicy = new PutPolicy();
@@ -119,8 +119,8 @@ public class UploadDemo {
         putPolicy.setOverwrite(1);
         putPolicy.setDeadline(String.valueOf(DateUtil.nextDate(1, new Date()).getTime()));
         putPolicy.setScope(bucketName + ":" + fileKey);
-        putPolicy.setPersistentOps("imageMogr2/jpg/crop/500x500/gravity/CENTER/lowpoly/1|saveas/ZnV5enRlc3Q4Mi0wMDE6ZG9fY3J5c3RhbGxpemVfZ3Jhdml0eV9jZW50ZXJfMTQ2NTkwMDg0Mi5qcGc="); // 设置视频转码操作
-        putPolicy.setPersistentNotifyUrl("http://demo1/notifyUrl"); // 设置转码后回调的接口
+        putPolicy.setPersistentOps("imageMogr2/jpg/crop/500x500/gravity/CENTER/lowpoly/1|saveas/ZnV5enRlc3Q4Mi0wMDE6ZG9fY3J5c3RhbGxpemVfZ3Jhdml0eV9jZW50ZXJfMTQ2NTkwMDg0Mi5qcGc="); // Set video transcoding operation
+        putPolicy.setPersistentNotifyUrl("http://demo1/notifyUrl"); // Set callback interface after transcoding
         putPolicy.setReturnBody(returnBody);
         try {
             HttpClientResult result = fileUploadManage.upload(bucketName,fileKey,srcFilePath,putPolicy);

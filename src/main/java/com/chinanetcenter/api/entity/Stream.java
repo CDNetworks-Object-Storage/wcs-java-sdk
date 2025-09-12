@@ -5,30 +5,30 @@ package com.chinanetcenter.api.entity;
  */
 public class Stream {
 
-    private String avg_frame_rate; //平均帧率
-    private String bit_rate;  //码率
-    private String codec_long_name;  //编码器名全称
-    private String codec_name;  //编码器名
-    private String codec_tag;  //编码器标签
-    private String codec_tag_string; //编码器标签名
-    private String codec_time_base;  //编码器每帧时长
-    private String codec_type;  //编码器类型
-    private String display_aspect_ratio;  //显示长宽比
-    private Disposition disposition;  //处理信息
-    private String duration;  //文件总时间
-    private String duration_ts;  //帧总时间
-    private long has_b_frames;  //记录帧缓存大小
-    private long height;  //高度
-    private String index;  //流索引号
-    private int level;  //级别
-    private long nb_frames;  //帧数
-    private String pix_fmt;  //像素个数
-    private String profile;  //配置信息
-    private String r_frame_rate;  //真实基础帧率
-    private String sample_aspect_ratio;  //采样率
-    private String start_pts;  //起始时间
-    private String start_time;  //首帧时间
-    private Tag tag;  //标签
+    private String avg_frame_rate; // Average frame rate
+    private String bit_rate;  // Bit rate
+    private String codec_long_name;  // Full encoder name
+    private String codec_name;  // Encoder name
+    private String codec_tag;  //Encoder tag
+    private String codec_tag_string; //Encoder tag name
+    private String codec_time_base;  //Encoder time base per frame
+    private String codec_type;  //Encoder type
+    private String display_aspect_ratio;  //Display aspect ratio
+    private Disposition disposition;  //Disposition information
+    private String duration;  //File total duration
+    private String duration_ts;  //Frame total duration in timestamp
+    private long has_b_frames;  //Records the frame buffer size
+    private long height;  //Height
+    private String index;  //Stream index number
+    private int level;  //Level
+    private long nb_frames;  //Number of frames
+    private String pix_fmt;  //Pixel format
+    private String profile;  //Profile information
+    private String r_frame_rate;  //Real base frame rate
+    private String sample_aspect_ratio;  //Sample aspect ratio
+    private String start_pts;  //Start time
+    private String start_time;  //First frame time
+    private Tag tag;  //Tag
     private long timeBase;
     private long width;
 

@@ -10,12 +10,12 @@ import java.util.Map;
 
 /**
  * Created by fuyz on 2016/6/27.
- * 直播的文件管理
+ * Live stream file management
  */
 public class WsliveFileManage {
 
     /**
-     *根据流名获取文件列表
+     * Retrieves a list of files based on the stream name.
      */
     public static HttpClientResult fileList(String bucketName, String channelname, String startTime, String endTime,String start, String limit) throws WsClientException {
         String url = "/wslive/list?" + "channelname=" + channelname + "&bucket=" + bucketName + "&startTime=" + startTime +"&endTime=" + endTime + "&start="+ start + "&limit=" + limit;
@@ -27,8 +27,8 @@ public class WsliveFileManage {
     }
 
     /**
-     *设置文件的过期时间
-     * 超过过期时间自动删除
+     * Sets the expiration time for a file.
+     * Files will be automatically deleted after the set expiration time.
      */
     public static HttpClientResult setDeadline(String bucketName, String key, int deadline) throws WsClientException {
         String body = "bucket=" + EncodeUtils.urlsafeEncode(bucketName);

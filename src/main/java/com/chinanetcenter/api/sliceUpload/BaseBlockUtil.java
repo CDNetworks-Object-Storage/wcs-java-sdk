@@ -27,7 +27,7 @@ import java.util.zip.CRC32;
 
 /**
  * Created by fuyz on 2014/8/5.
- * 分片上传公用方法
+ * Common methods for sliced upload
  */
 public class BaseBlockUtil {
     public static int KB = 1024;
@@ -43,8 +43,8 @@ public class BaseBlockUtil {
     public JSONObjectRet jsonObjectRet;
     public PutExtra putExtra;
     protected Map<String, String> headMap;
-    protected int REQUEST_TIMEOUT = 60 * 1000;  //设置请求超时60秒钟
-    protected int SO_TIMEOUT = 300 * 1000;       //设置等待数据超时时间5分钟
+    protected int REQUEST_TIMEOUT = 60 * 1000;  //Set request timeout to 60 seconds
+    protected int SO_TIMEOUT = 300 * 1000;       //Set data timeout to 5 minutes
 
     public BaseBlockUtil(BlockObject blockObject, JSONObjectRet jsonObjectRet, PutExtra putExtra, Map<String, String> headMap) {
         this.blockObject = blockObject;

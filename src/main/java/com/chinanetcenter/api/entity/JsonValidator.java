@@ -16,10 +16,10 @@ public class JsonValidator {
     }
 
     /**
-     * 验证一个字符串是否是合法的JSON串
+     * Validates whether a string is a valid JSON string
      *
-     * @param input 要验证的字符串
-     * @return true-合法 ，false-非法
+     * @param input The string to be validated
+     * @return true - valid, false - invalid
      */
     public boolean validate(String input) {
         input = input.trim();
