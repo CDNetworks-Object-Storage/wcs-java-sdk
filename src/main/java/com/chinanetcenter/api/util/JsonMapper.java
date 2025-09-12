@@ -19,9 +19,9 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * 简单封装Jackson，实现JSON String《-》Java Object的Mapper.
+ * Simply encapsulate Jackson to implement a Mapper for JSON String <-> Java Object.
  * <p>
- * 封装不同的输出风格, 使用不同的builder函数创建实例.
+ * Encapsulates different output styles, using different builder functions to create instances.
  *
  * @author calvin
  */
@@ -35,30 +35,30 @@ public class JsonMapper {
 
     public JsonMapper(Include include) {
         mapper = new ObjectMapper();
-        // 设置输出时包含属性的风格
+        // Set the style for including attributes when outputting.
         if (include != null) {
             mapper.setSerializationInclusion(include);
         }
-        // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
+        // When setting input, ignore properties that exist in the JSON string but not in the Java object.
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 
     /**
-     * 创建只输出非Null且非Empty(如List.isEmpty)的属性到Json字符串的Mapper,建议在外部接口中使用.
+     * Create a Mapper that only outputs non-null and non-empty (e.g., List.isEmpty) properties to a JSON string. It is recommended to use it in external interfaces.
      */
     public static JsonMapper nonEmptyMapper() {
         return new JsonMapper(Include.NON_EMPTY);
     }
 
     /**
-     * 创建只输出初始值被改变的属性到Json字符串的Mapper, 最节约的存储方式，建议在内部接口中使用。
+     * Create a Mapper that outputs only properties whose initial values have been changed to a JSON string, using the most economical storage method. It is recommended for use in internal interfaces.
      */
     public static JsonMapper nonDefaultMapper() {
         return new JsonMapper(Include.NON_DEFAULT);
     }
 
     /**
-     * Object可以是POJO，也可以是Collection或数组。 如果对象为Null, 返回"null". 如果集合为空集合, 返回"[]".
+     * The object can be a POJO, a Collection, or an array. If the object is null, "null" is returned. If the collection is empty, "[]" is returned.
      */
     public String toJson(Object object) {
 
@@ -70,11 +70,11 @@ public class JsonMapper {
     }
 
     /**
-     * 反序列化POJO或简单Collection如List&lt;String&gt;.
+     * Deserialize POJO or simple Collection like List&lt;String&gt;.
      * <p>
-     * 如果JSON字符串为Null或"null"字符串, 返回Null. 如果JSON字符串为"[]", 返回空集合.
+     * If the JSON string is null or the string "null", return null. If the collection is an empty collection, return "[]".
      * <p>
-     * 如需反序列化复杂Collection如List&lt;MyBean&gt;, 请使用fromJson(String, JavaType)
+     * To deserialize complex Collections like List&lt;MyBean&gt;, please use fromJson(String, JavaType).
      *
      * @see #fromJson(String, com.fasterxml.jackson.databind.JavaType)
      */
@@ -91,8 +91,8 @@ public class JsonMapper {
     }
 
     /**
-     * 反序列化复杂Collection如List&lt;Bean&gt;,
-     * 先使用createCollectionType()或contructMapType()构造类型, 然后调用本函数.
+     * Deserializing complex Collections like List&lt;Bean&gt;,
+     * First, use `createCollectionType()` or `constructMapType()` to construct the type, then call this function.
      */
     @SuppressWarnings("unchecked")
     public <T> T fromJson(String jsonString, JavaType javaType) {
@@ -108,7 +108,7 @@ public class JsonMapper {
     }
 
     /**
-     * 构造Collection类型.
+     * Construct Collection type.
      */
     @SuppressWarnings("rawtypes")
     public JavaType contructCollectionType(Class<? extends Collection> collectionClass, Class<?> elementClass) {
@@ -116,7 +116,7 @@ public class JsonMapper {
     }
 
     /**
-     * 构造Map类型.
+     * Construct Map type.
      */
     @SuppressWarnings("rawtypes")
     public JavaType contructMapType(Class<? extends Map> mapClass, Class<?> keyClass, Class<?> valueClass) {
@@ -124,7 +124,7 @@ public class JsonMapper {
     }
 
     /**
-     * 当JSON里只含有Bean的部分屬性時，更新一個已存在Bean，只覆蓋該部分的屬性.
+     * When a JSON only contains some properties of a Bean, update an existing Bean by only overwriting those properties.
      */
     public void update(String jsonString, Object object) {
         try {
@@ -135,15 +135,15 @@ public class JsonMapper {
     }
 
     /**
-     * 輸出JSONP格式數據.
+     * Output JSONP format data.
      */
     public String toJsonP(String functionName, Object object) {
         return toJson(new JSONPObject(functionName, object));
     }
 
     /**
-     * 設定是否使用Enum的toString函數來讀寫Enum, 為False時時使用Enum的name()函數來讀寫Enum, 默認為False.
-     * 注意本函數一定要在Mapper創建後, 所有的讀寫動作之前調用.
+     * Configure whether to use the Enum's `toString()` function to read and write Enums. When set to `False`, the Enum's `name()` function will be used to read and write Enums. The default is `False`.
+     * Note: This function must be called after the Mapper is created and before all read and write operations.
      */
     public void enableEnumUseToString() {
         mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
@@ -151,8 +151,8 @@ public class JsonMapper {
     }
 
     /**
-     * 支持使用Jaxb的Annotation，使得POJO上的annotation不用与Jackson耦合。
-     * 默认会先查找jaxb的annotation，如果找不到再找jackson的。
+     * Support using JAXB annotations, so that POJO annotations are not coupled with Jackson.
+     * The default behavior is to first look for JAXB annotations; if not found, then Jackson annotations will be sought.
      */
     public void enableJaxbAnnotation() {
         JaxbAnnotationModule module = new JaxbAnnotationModule();
@@ -160,7 +160,7 @@ public class JsonMapper {
     }
 
     /**
-     * 取出Mapper做进一步的设置或使用其他序列化API.
+     * Retrieve the Mapper for further settings or use other serialization APIs.
      */
     public ObjectMapper getMapper() {
         return mapper;

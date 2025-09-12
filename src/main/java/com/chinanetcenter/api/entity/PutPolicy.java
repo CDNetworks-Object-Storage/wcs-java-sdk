@@ -1,76 +1,76 @@
 package com.chinanetcenter.api.entity;
 
 /**
- * 上传策略对象<br>
+ * Upload policy object<br>
  * <!--
  * <table border="1px solid">
  * 	<tr>
- * 		<th>字段名</th>
- * 		<th width="60px">是否必填</th>
- * 		<th>描述</th>
+ * 		<th>Field Name</th>
+ * 		<th width="60px">Required</th>
+ * 		<th>Description</th>
  * 	</tr>
  * 	<tr>
  * 		<td>scope</td>
- * 		<td>是</td>
- * 		<td>指定上传的目标资源空间（Bucket）和资源名（Key）有两种格式：1. <bucket>，表示允许用户上传文件到指定的 bucket。2. <bucket>:<filename>，表示允许用户上传指定filename的文件。</td>
+ * 		<td>Yes</td>
+ * 		<td>Specifies the target resource space (Bucket) and resource name (Key) for upload. There are two formats: 1. <bucket>, which means allowing users to upload files to the specified bucket. 2. <bucket>:<filename>, which means allowing users to upload files with the specified filename.</td>
  * 	</tr>
  * 	<tr>
  * 		<td>deadline</td>
- * 		<td>是</td>
- * 		<td>上传请求授权的截止时间；UNIX时间戳，单位：豪秒。范例：1398916800000，代表时间2014-05-01 12:00:00。</td>
+ * 		<td>Yes</td>
+ * 		<td>The deadline for upload request authorization; UNIX timestamp, unit: milliseconds. Example: 1398916800000, representing 2014-05-01 12:00:00.</td>
  * 	</tr>
  * 	<tr>
  * 		<td>returnUrl</td>
- * 		<td>否</td>
- * 		<td>Web端文件上传成功或失败后，浏览器都会执行303跳转的URL；通常用于HTML Form上传。(1)文件上传成功后会跳转到<returnUrl>?upload_ret=<queryString>, <queryString>包含returnBody内容。(2)文件上传失败后会跳转到<returnUrl>?code=<code>&message=<message>, <code>是错误码，<message>是错误具体信息。如不设置returnUrl，则直接将returnBody的内容返回给客户端。</td>
+ * 		<td>No</td>
+ * 		<td>After a file upload succeeds or fails on the web, the browser will perform a 303 redirect to this URL; typically used for HTML Form uploads. (1) After a successful file upload, it will redirect to <returnUrl>?upload_ret=<queryString>, where <queryString> contains the returnBody content. (2) After a failed file upload, it will redirect to <returnUrl>?code=<code>&message=<message>, where <code> is the error code and <message> is the specific error message. If returnUrl is not set, the content of returnBody will be returned directly to the client.</td>
  * 	</tr>
  * 	<tr>
  * 		<td>returnBody</td>
- * 		<td>否</td>
+ * 		<td>No</td>
  * 		<td>
- * 			上传成功后，自定义最终返回給上传端（该字段配合returnUrl使用）的数据。如果您只需要返回文件大小和文件地址，只需将returnBody设置成fname=$(fname)&fsize=$(fsize)&url=$(url)即可。
+ * 			After a successful upload, customize the data finally returned to the uploader (this field is used with returnUrl). If you only need to return the file size and file address, just set returnBody to fname=$(fname)&fsize=$(fsize)&url=$(url).
  * 			<ul>
  * 				<li>
- * 					自定义替换变量，格式如下：$(x:variable)，范例：position=$(x:position)&message=$(x:message)
+ * 					Custom replacement variables, format as follows: $(x:variable), example: position=$(x:position)&message=$(x:message)
  * 				</li>
  * 				<li>
- * 					特殊替换变量
+ * 					Special replacement variables
  * 					<table border="1px solid">
  * 						<tr>
- * 							<th>参数值</th>
- * 							<th>描述</th>
+ * 							<th>Parameter Value</th>
+ * 							<th>Description</th>
  * 						</tr>
  * 						<tr>
  * 							<td>$(bucket)</td>
- * 							<td>获得上传的目标空间名</td>
+ * 							<td>Get the target bucket name for upload</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(key)</td>
- * 							<td>获得文件保存在空间中的资源名</td>
+ * 							<td>Get the resource name of the file saved in the space</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(fname)</td>
- * 							<td>上传的原始文件名</td>
+ * 							<td>Original uploaded file name</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(hash)</td>
- * 							<td>资源唯一标识（hash(bucket:fname)）</td>
+ * 							<td>Unique resource identifier (hash(bucket:fname))</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(fsize)</td>
- * 							<td>资源尺寸，单位为字节</td>
+ * 							<td>Resource size, in bytes</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(url)</td>
- * 							<td>访问该资源的实际路径，经过URL安全的Base64编码，使用时需要相应解析下</td>
+ * 							<td>The actual path to access this resource, URL-safe Base64 encoded, needs to be parsed accordingly when used</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(costTime)</td>
- * 							<td>此次请求消耗的时间</td>
+ * 							<td>Time consumed by this request</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(ip)</td>
- * 							<td>此次请求的来源IP</td>
+ * 							<td>Source IP of this request</td>
  * 						</tr>
  * 					</table>
  * 				</li>
@@ -79,66 +79,66 @@ package com.chinanetcenter.api.entity;
  * 	</tr>
  * 	<tr>
  * 		<td>fsizeLimit</td>
- * 		<td>否</td>
- * 		<td>限定上传文件的大小，单位：字节（Byte）；超过限制的上传内容会被判为上传失败，返回413状态码。</td>
+ * 		<td>No</td>
+ * 		<td>Limits the size of the uploaded file, unit: bytes (Byte); uploaded content exceeding the limit will be judged as upload failure and return status code 413.</td>
  * 	</tr>
  * 	<tr>
  * 		<td>overwrite</td>
- * 		<td>否</td>
- * 		<td>指定是否覆盖服务器上已经存在的文件；0:不覆盖；1：覆盖</td>
+ * 		<td>No</td>
+ * 		<td>Specifies whether to overwrite existing files on the server; 0: do not overwrite; 1: overwrite</td>
  * 	</tr>
  * 	<tr>
  * 		<td>callbackUrl</td>
- * 		<td>否</td>
- * 		<td>上传成功后，网宿云以POST方式请求该callbackUrl（必须公网URL地址，能正常响应HTTP/1.1 200 OK）。要求 callbackUrl 的Response返回数据格式为JSON文本体 ，即Content-Type 为 "application/json"。</td>
+ * 		<td>No</td>
+ * 		<td>After a successful upload, Wangsu Cloud will request this callbackUrl via POST (must be a public URL address that can normally respond to HTTP/1.1 200 OK). The callbackUrl's Response is required to return data in JSON text format, i.e., Content-Type is "application/json".</td>
  * 	</tr>
  * 	<tr>
  * 		<td>callbackBody</td>
  * 		<td>否</td>
  * 		<td>
- * 			上传成功后，网宿云POST方式提交请求的数据。callbackBody 要求是合法的 url query string。如：key=$(key) &fsize=$(fsize)
+ * 			After a successful upload, the data that Wangsu Cloud submits via POST request. callbackBody is required to be a legal url query string. Such as: key=$(key) &fsize=$(fsize)
  *			<ul>
  * 				<li>
- * 					自定义替换变量，格式如下：$(x:variable)，范例：position=$(x:position)&message=$(x:message)
+ * 					Custom replacement variables, format is as follows: $(x:variable), example: position=$(x:position)&message=$(x:message)
  * 				</li>
  * 				<li>
- * 					特殊替换变量
+ * 					Special replacement variables
  * 					<table border="1px solid">
  * 						<tr>
- * 							<th>参数值</th>
- * 							<th>描述</th>
+ * 							<th>Parameter Value</th>
+ * 							<th>Description</th>
  * 						</tr>
  * 						<tr>
  * 							<td>$(bucket)</td>
- * 							<td>获得上传的目标空间名</td>
+ * 							<td>Get the target bucket name for upload</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(key)</td>
- * 							<td>获得文件保存在空间中的资源名</td>
+ * 							<td>Get the resource name of the file saved in the space</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(fname)</td>
- * 							<td>上传的原始文件名</td>
+ * 							<td>Original uploaded file name</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(hash)</td>
- * 							<td>资源唯一标识（hash(bucket:fname)）</td>
+ * 							<td>Unique resource identifier (hash(bucket:fname))</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(fsize)</td>
- * 							<td>资源尺寸，单位为字节</td>
+ * 							<td>Resource size, in bytes</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(url)</td>
- * 							<td>访问该资源的实际路径，经过URL安全的Base64编码，使用时需要相应解析下</td>
+ * 							<td>The actual path to access this resource, URL-safe Base64 encoded, needs to be parsed accordingly when used</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(costTime)</td>
- * 							<td>此次请求消耗的时间</td>
+ * 							<td>Time consumed by this request</td>
  * 						</tr>
  * 						<tr>
  * 							<td>$(ip)</td>
- * 							<td>此次请求的来源IP</td>
+ * 							<td>Source IP of this request</td>
  * 						</tr>
  * 					</table>
  * 				</li>
@@ -149,39 +149,39 @@ package com.chinanetcenter.api.entity;
  * 		<td>persistentOps</td>
  * 		<td>否</td>
  * 		<td>
- * 			上传成功后，触发待执行的处理指令列表。每个指令是一个规范的字符串，多个指令用“;”分隔。
+ * 			List of processing commands to be executed after a successful upload. Each command is a standard string, and multiple commands are separated by ";"
  * 			<table border="1px solid">
  * 				<tr>
- * 					<th>指令</th>
- * 					<th>说明</th>
+ * 					<th>Command</th>
+ * 					<th>Description</th>
  * 				</tr>
  * 				<tr>
  * 					<td>avthumb/Format</td> 
- * 					<td>Format（必填）-目标视频的格式（支持flv），范例：avthumb/flv</td>
+ * 					<td>Format (required) - target video format (supports flv), example: avthumb/flv</td>
  * 				</tr>
  * 				<tr>
  * 					<td>vframe/<Format></td> 
- * 					<td>Format（必填）-目标图的格式，jpg等。范例：vframe/jpg</td>
+ * 					<td>Format (required) - target image format, jpg, etc. Example: vframe/jpg<</td>
  * 				</tr>
  * 				<tr>
  * 					<td>vframe/offset/<Second></td> 
- * 					<td>offset/<Second>（必填）-指定视频帧的时刻，单位s，范例:vframe/offset/7</td>
+ * 					<td>offset/<Second> (required) - specify the time of the video frame, unit s, example: vframe/offset/7</td>
  * 				</tr>
  * 				<tr>
  * 					<td>vframe/w/<Width></td> 
- * 					<td>w/<Width>（可选）-指定截取图片的宽度，单位px（如果不指定该值，会使用视频默认宽度）</td>
+ * 					<td>w/<Width> (optional) - specify the width of the captured image, unit px (if not specified, the video's default width will be used)</td>
  * 				</tr>
  * 				<tr>
  * 					<td>vframe/h/<Height></td> 
- * 					<td>h/<Height>（可选）-指定截取图片的高度，单位px（如果不指定该值，会使用视频默认高度）</td>
+ * 					<td>h/<Height> (optional) - specify the height of the captured image, unit px (if not specified, the video's default height will be used)</td>
  * 				</tr>
  * 			</table>
  *		</td>
  * 	</tr>
  * 	<tr>
  * 		<td>persistentNotifyUrl</td>
- * 		<td>否</td>
- * 		<td>接收预处理结果通知的URL（必须公网URL地址，能正常响应HTTP/1.1 200 OK）。提示：请在设置persistenOps字段时，完成persistentNotifyUrl字段设置，平台会通过调用persistentNotifyUrl字段设置的URL，来通知您指令处理的结果。</td>
+ * 		<td>No</td>
+ * 		<td>URL for receiving pre-processing result notifications (must be a public URL address that can normally respond to HTTP/1.1 200 OK). Hint: When setting the persistentOps field, complete the persistentNotifyUrl field setting. The platform will notify you of the instruction processing result by calling the URL set in the persistentNotifyUrl field.</td>
  * 	</tr>
  * </table>
  * -->
@@ -192,52 +192,52 @@ package com.chinanetcenter.api.entity;
 public class PutPolicy {
 
     /**
-     * 指定上传的目标资源空间（bucektName）和资源名（fileName）
-     * 格式为bucektName:fileName
+     * Specifies the target resource space (bucketName) and resource name (fileName) for upload.
+     * Format is bucketName:fileName
      */
     private String scope;
     /**
-     * 有效时间, 时间的Long类型, 单位为毫秒
+     * Valid time, Long type, unit in milliseconds
      */
     private String deadline;
     /**
-     * 上传成功后，自定义最终返回給上传端（该字段配合returnUrl使用）的数据。<br />
-     * 返回的内容<br />
-     * 格式例子: $(bucket)&$(fsize)&$(hash)&$(key)<br />
+     * After a successful upload, customize the data finally returned to the uploader (this field is used with returnUrl).<br />
+     * Returned content<br />
+     * Format example: $(bucket)&$(fsize)&$(hash)&$(key)<br />
      */
     private String returnBody;
     /**
-     * 指定是否覆盖服务器上已经存在的文件<br />
-     * 1-允许覆盖, 0-不允许
+     * Specifies whether to overwrite existing files on the server.<br />
+     * 1 - allow overwrite, 0 - not allow
      */
     private int overwrite;
     /**
-     * 限定上传文件的大小
+     * Limits the size of the uploaded file
      */
     private long fsizeLimit;
     /**
-     * Web端文件上传成功后，浏览器执行303跳转的URL
+     * After a successful web file upload, the URL to which the browser performs a 303 redirect
      */
     private String returnUrl;
     /**
-     * 回调url
+     * Callback URL
      */
     private String callbackUrl;
     /**
-     * 回调内容<br />
-     * 格式例子:<keyName>=(keyValue)&<keyName>=(keyValue)<br />
-     * 必须以键值的格式
+     * Callback content<br />
+     * Format example: <keyName>=(keyValue)&<keyName>=(keyValue)<br />
+     * Must be in key-value format
      */
     private String callbackBody;
     /**
-     * 持久化操作指令列表<br />
-     * 转换为flv指令：avthumb/flv/vb/1.25m<br />
-     * 视频截图指令：vframe/jpg/offset/1<br />
-     * 使用分号";"分隔
+     * Persistent operation instruction list<br />
+     * Convert to flv instruction: avthumb/flv/vb/1.25m<br />
+     * Video screenshot instruction: vframe/jpg/offset/1<br />
+     * Separated by semicolon ";"
      */
     private String persistentOps;
     /**
-     * 持久化操作通知Url
+     * Persistent operation notification URL
      */
     private String persistentNotifyUrl;
 
@@ -378,3 +378,5 @@ public class PutPolicy {
     }
 
 }
+
+

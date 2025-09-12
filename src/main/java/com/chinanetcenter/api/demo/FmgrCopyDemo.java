@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 用途描述：高级资源管理-复制资源
+ * Purpose: Advanced Resource Management - Copy Resources
  * Created by chenql on 2018/4/3.
  */
 public class FmgrCopyDemo {
@@ -18,7 +18,7 @@ public class FmgrCopyDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain
+         * You can obtain uploadDomain and MgrDomain in the User Management Interface - Security Management - Domain Query.
          */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
@@ -35,7 +35,7 @@ public class FmgrCopyDemo {
             fmgrParam2.setResource("mybucket:bb.jpg");
             fmgrParam2.setFileKey("copy/b.jpg");
             list.add(fmgrParam2);
-            String notifyURL = "http://demo1/notifyUrl";  //通知地址，转码成功后会回调此地址
+            String notifyURL = "http://demo1/notifyUrl";  // Notification address, this address will be called back after successful transcoding
             String separate = "1";
             HttpClientResult result = fileManageCommand.fmgrCopy(list, notifyURL, null, separate);
             System.out.println(result.getStatus() + ":" + result.getResponse());

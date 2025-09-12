@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 用途描述：高级资源管理-批量修改文件保存期限
+ * Purpose: Advanced Resource Management - Batch Modify File Retention Period
  * Created by chenql on 2018/4/3.
  */
 public class FmgrSetdeadlineDemo {
@@ -18,7 +18,7 @@ public class FmgrSetdeadlineDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain
+         * You can obtain uploadDomain and MgrDomain in the User Management Interface - Security Management - Domain Query.
          */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
@@ -35,7 +35,7 @@ public class FmgrSetdeadlineDemo {
             fmgrParam2.setPrefix("bbb");
             fmgrParam2.setDeadline(5);
             list.add(fmgrParam2);
-            String notifyURL = "http://demo1/notifyUrl";  //通知地址，转码成功后会回调此地址
+            String notifyURL = "http://demo1/notifyUrl";  // Notification address, this address will be called back after successful transcoding
             HttpClientResult result = fileManageCommand.fmgrSetdeadline(list, notifyURL);
             System.out.println(result.getStatus() + ":" + result.getResponse());
         } catch (WsClientException e) {

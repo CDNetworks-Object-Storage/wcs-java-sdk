@@ -4,7 +4,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * 签名工具类
+ * Signature utility class
  */
 public class EncryptUtil {
 

@@ -4,7 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * 配置类， 配置用户的ak和sk信息<br>
+ * Configuration class, configuring user's AK and SK information<br>
  *
  * @author zouhao
  * @version 1.0
@@ -13,24 +13,24 @@ import java.net.UnknownHostException;
 public class Config {
     public final static String VERSION_NO = "wcs-java-sdk-2.0.7";
     /**
-     * 具体AK SK信息请从网宿云存储Web应用中(账号管理-密钥管理)处获取
+     * For specific AK SK information, please obtain it from the Wangsu Cloud Storage Web application (Account Management - Key Management).
      */
     public static String AK = "your-ak";
     public static String SK = "your-sk";
     /**
-     * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain
+     * You can obtain `uploadDomain` and `MgrDomain` in the User Management Interface - Security Management - Domain Query.
      */
     public static String PUT_URL = "your uploadDomain";
     public static String MGR_URL = "your MgrDomain";
     /**
-     * 下载GET_URL使用绑定域名
+     * Download GET_URL using bound domain
      */
     public static String GET_URL = "your downloadDomain";
     public static String LOCAL_IP = "127.0.0.1";
     public static String LOG_FILE_PATH = "";
 
     /**
-     * 禁止外部直接生成实例<br>
+     * Prevents direct external instantiation.<br>
      */
     private Config() {
         try {
@@ -41,10 +41,10 @@ public class Config {
     }
 
     /**
-     * 初始化构造密钥<br>
+     * Initializes the key.<br>
      *
-     * @param ak 空间的AK信息
-     * @param sk 空间的SK信息
+     * @param ak The AK information for the space.
+     * @param sk The SK information for the space.
      */
     public static void init(String ak, String sk) {
         AK = ak;
@@ -52,11 +52,11 @@ public class Config {
     }
 
     /**
-     * 初始化构造密钥<br>
+     * Initializes the key.<br>
      *
-     * @param ak 空间的AK信息
-     * @param sk 空间的SK信息
-     * @param logFilePath http请求日志的路径
+     * @param ak The AK information for the space.
+     * @param sk The SK information for the space.
+     * @param logFilePath The path for HTTP request logs.
      */
     public static void init(String ak, String sk, String logFilePath) {
         AK = ak;
@@ -65,10 +65,10 @@ public class Config {
     }
 
     /**
-     * 初始化构造密钥<br>
+     * Initializes the key.<br>
      *
-     * @param ak 空间的AK信息
-     * @param sk 空间的SK信息
+     * @param ak The AK information for the space.
+     * @param sk The SK information for the space.
      */
     public static void init(String ak, String sk, String putUrl, String getUrl) {
         AK = ak;
@@ -78,10 +78,10 @@ public class Config {
     }
 
     /**
-     * 初始化构造密钥<br>
+     * Initializes the key.<br>
      *
-     * @param ak 空间的AK信息
-     * @param sk 空间的SK信息
+     * @param ak The AK information for the space.
+     * @param sk The SK information for the space.
      */
     public static void init(String ak, String sk, String putUrl, String getUrl, String mgrUrl) {
         AK = ak;
@@ -92,11 +92,11 @@ public class Config {
     }
 
     /**
-     * 初始化构造密钥<br>
+     * Initializes the key.<br>
      *
-     * @param ak          空间的AK信息
-     * @param sk          空间的SK信息
-     * @param logFilePath http请求日志的路径
+     * @param ak          Accesskey
+     * @param sk          Accesskey Secret
+     * @param logFilePath The path for HTTP request logs.
      */
     public static void init(String ak, String sk, String putUrl, String getUrl, String mgrUrl, String logFilePath) {
         AK = ak;

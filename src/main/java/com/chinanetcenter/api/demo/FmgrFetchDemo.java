@@ -11,14 +11,14 @@ import java.util.List;
 
 /**
  * Created by fuyz on 2016/9/1.
- * stat文件信息
+ * Stat file information
  */
 public class FmgrFetchDemo {
     public static void main(String[] args) {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain
+         * You can obtain uploadDomain and MgrDomain in the User Management Interface - Security Management - Domain Query.
          */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
@@ -36,7 +36,7 @@ public class FmgrFetchDemo {
             fmgrParam2.setFileKey("indexNew/image/pic2.jpg");
             fmgrParam2.putExtParams("fetchTS", "0");
             list.add(fmgrParam2);
-            String notifyURL = "http://demo1/notifyUrl";  //通知地址，转码成功后会回调此地址
+            String notifyURL = "http://demo1/notifyUrl";  // Notification address, this address will be called back after successful transcoding
             String force = "1";
             String separate = "1";
             HttpClientResult result = fileManageCommand.fmgrFetch(list, notifyURL, force, separate);

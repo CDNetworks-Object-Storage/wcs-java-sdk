@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * Created by fuyz on 2016/8/31.
- * 分片上传
+ * Sliced upload
  */
 public class SliceUploadDemo {
 
@@ -26,17 +26,17 @@ public class SliceUploadDemo {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain
+         * You can obtain uploadDomain and MgrDomain in the User Management Interface - Security Management - Domain Query.
          */
         Config.PUT_URL = "your uploadDomain";
         String bucketName = "your-bucket";
         String fileKey = "java-sdk/com.toycloud.MeiYe.apk";
 
         String srcFilePath = "D:\\testfile\\test001\\com.toycloud.MeiYe.apk";
-        BaseBlockUtil.CHUNK_SIZE = 4 * 1024 * 1024;  //每一片为4M，默认256k，减少上传请求
+        BaseBlockUtil.CHUNK_SIZE = 4 * 1024 * 1024;  // Each slice is 4MB, default 256KB, reducing upload requests
         SliceUploadDemo demo = new SliceUploadDemo();
         demo.sliceUpload(bucketName,fileKey,srcFilePath);
-        /**  第二种方式，key不写到scope里，而是从head指定 用于同一个token可以上传多个文件
+        /** The second way, key is not written to scope, but specified from head. Used for uploading multiple files with the same token.
         String fileKey2 = "java-sdk/com.toycloud.MeiYe2.apktest";
         String mimeType = "application/vnd.android.package-archive";
         demo.sliceUpload(bucketName,fileKey2,srcFilePath,mimeType);
@@ -69,8 +69,8 @@ public class SliceUploadDemo {
     public JSONObjectRet getJSONObjectRet(final String bucketName,final String fileKey,final String filePath){
         return new JSONObjectRet() {
             /**
-             * 文件上传成功后会回调此方法
-             * 校验下上传文件的hash和本地文件的hash是否一致，不一致可能本地文件被修改过
+             * This method will be called back after the file is successfully uploaded
+             * Check if the hash of the uploaded file is consistent with the hash of the local file. Inconsistency may indicate that the local file has been modified.
              */
             @Override
             public void onSuccess(JsonNode obj) {
@@ -78,7 +78,7 @@ public class SliceUploadDemo {
                 String eTagHash = WetagUtil.getEtagHash(fileHash.getParent(), fileHash.getName());// 根据文件内容计算hash
                 SliceUploadHttpResult result = new SliceUploadHttpResult(obj);
                 if (eTagHash.equals(result.getHash())) {
-                    System.out.println("上传成功");
+                    System.out.println("Upload successful");
                 } else {
                     System.out.println("hash not equal,eTagHash:" + eTagHash + " ,hash:" + result.getHash());
                 }
@@ -89,7 +89,7 @@ public class SliceUploadDemo {
                 System.out.println(new String(body));
             }
 
-            // 文件上传失败回调此方法
+            // This method is called back when file upload fails
             @Override
             public void onFailure(Exception ex) {
                 if (ex instanceof WsClientException) {
@@ -98,19 +98,19 @@ public class SliceUploadDemo {
                 }else {
                     ex.printStackTrace();
                 }
-                System.out.println("上传出错，" + ex.getMessage());
+                System.out.println("Upload error, " + ex.getMessage());
             }
 
-            // 进度条展示，每上传成功一个块回调此方法
+            // Progress bar display, this method is called back after each block is successfully uploaded
             @Override
             public void onProcess(long current, long total) {
                 System.out.printf("%s\r", current * 100 / total + " %");
             }
 
             /**
-             * 持久化，断点续传时把进度信息保存，下次再上传时把JSONObject赋值到PutExtra
-             * sdk默认把信息保存到磁盘文件，如果有需要请自己保存到db
-             * 下次再续传的时候把值赋值到PutExtra参数里
+             * Persistence, save progress information during breakpoint resume, assign JSONObject to PutExtra next time uploading
+             * SDK saves information to disk file by default, please save to DB if needed
+             * Assign the value to PutExtra parameter when resuming upload next time
              */
             @Override
             public void onPersist(JsonNode obj) {
@@ -127,7 +127,7 @@ public class SliceUploadDemo {
         JSONObjectRet jsonObjectRet = new JSONObjectRet() {
             @Override
             public void onSuccess(JsonNode obj) {
-                System.out.println("上传成功");
+                System.out.println("Upload successful");
             }
 
             @Override
@@ -142,7 +142,7 @@ public class SliceUploadDemo {
                 } else {
                     ex.printStackTrace();
                 }
-                System.out.println("上传出错，" + ex.getMessage());
+                System.out.println("Upload error, " + ex.getMessage());
             }
 
             @Override

@@ -6,8 +6,8 @@ package com.chinanetcenter.api.entity;
 public class ProgressListener {
 
     /**
-     * @param bytesWritten 已经上传或者下载的进度
-     * @param totalSize    文件总大小
+     * @param bytesWritten Progress of uploaded or downloaded bytes
+     * @param totalSize    Total file size
      */
     public void onProgress(long bytesWritten, long totalSize) {
         System.out.println(bytesWritten + " ," + totalSize);

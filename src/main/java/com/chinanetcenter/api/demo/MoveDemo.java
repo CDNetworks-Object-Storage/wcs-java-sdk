@@ -7,14 +7,14 @@ import com.chinanetcenter.api.wsbox.OperationManager;
 
 /**
  * Created by fuyz on 2016/9/1.
- * stat文件信息
+ * Stat file information
  */
 public class MoveDemo {
     public static void main(String[] args) {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
         /**
-         * 可在用户管理界面-安全管理-域名查询获取uploadDomain,MgrDomain
+         * You can obtain uploadDomain and MgrDomain in the User Management Interface - Security Management - Domain Query.
          */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";

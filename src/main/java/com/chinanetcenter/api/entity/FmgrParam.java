@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * Created by fuyz on 2016/9/2.
- * Fmgr参数对象
+ * Fmgr parameter object
  */
 public class FmgrParam {
     private String fetchURL;
@@ -15,10 +15,10 @@ public class FmgrParam {
     private String md5;
     private String resource;
     private String output;
-    private String deletets;//指定是否进行关联删除ts文件。  0 不进行关联删除  1 删除关联的ts文件
-    private int deadline = -1;//文件保存期限。超过保存天数文件自动删除,单位：天。例如：1、2、3…… 注：0表示尽快删除，-1表示取消过期时间，永久保存
+    private String deletets;// Specifies whether to delete associated ts files. 0: do not delete associated files, 1: delete associated ts files
+    private int deadline = -1;// File retention period. Files are automatically deleted after the retention period, unit: days. E.g., 1, 2, 3... Note: 0 means delete as soon as possible, -1 means cancel expiration time and save permanently.
     /**
-     * 用于存放后期扩展的参数，key value得根据文档中心的格式填
+     * Used to store parameters for future extensions. Key-value pairs must follow the format specified in the documentation.
      */
     private Map<String, String> paramMap = new HashMap<String, String>();
 

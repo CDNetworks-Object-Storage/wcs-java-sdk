@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 文件管理
+ * File Management
  *
  * @version 1.0
  * @since 2014/02/14
@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class OperationManager {
     /**
-     * 删除文件
+     * Deletes a file.
      * https://wcs.chinanetcenter.com/document/API/ResourceManage/delete
      */
     public HttpClientResult delete(String bucketName, String fileKey) throws WsClientException {
@@ -39,7 +39,7 @@ public class OperationManager {
     }
 
     /**
-     * 获取文件信息
+     * Retrieves file information.
      * https://wcs.chinanetcenter.com/document/API/ResourceManage/stat
      */
     public HttpClientResult stat(String bucketName, String fileKey) throws WsClientException {
@@ -53,7 +53,7 @@ public class OperationManager {
     }
 
     /**
-     * 列举资源(list)
+     * Lists resources.
      * https://wcs.chinanetcenter.com/document/API/ResourceManage/list
      */
     public HttpClientResult fileList(String bucketName, String limit, String prefix, String mode, String marker) throws WsClientException {
@@ -78,7 +78,7 @@ public class OperationManager {
     }
 
     /**
-     * 列举资源(list)
+     * Lists resources.
      * https://wcs.chinanetcenter.com/document/API/ResourceManage/list
      */
     public HttpClientResult fileList(String bucketName, String limit, String prefix, String mode, String marker, String startTime, String endTime) throws WsClientException {
@@ -112,7 +112,7 @@ public class OperationManager {
     }
 
     /**
-     * 更新镜像资源
+     * Updates mirrored resources.
      * https://wcs.chinanetcenter.com/document/API/ResourceManage/prefetch
      */
     public HttpClientResult prefetch(String bucketName, String... fileKeys) throws WsClientException {
@@ -142,8 +142,8 @@ public class OperationManager {
     }
 
     /**
-     * @param bucketName 空间名
-     * @param fileKeys   文件名列表
+     * @param bucketName Bucket name
+     * @param fileKeys   List of file names
      */
     public HttpClientResult prefetch(String bucketName, ArrayList<String> fileKeys) throws WsClientException {
         int length = fileKeys.size();
@@ -156,7 +156,7 @@ public class OperationManager {
     }
 
     /**
-     * 复制资源(copy)
+     * Copies resources.
      * https://wcs.chinanetcenter.com/document/API/ResourceManage/copy
      */
     public HttpClientResult copy(String bucketNameSrc, String fileKeySrc, String bucketNameDest, String fileKeyDest) throws WsClientException {
@@ -188,7 +188,7 @@ public class OperationManager {
     }
 
     /**
-     * 移动资源(move)
+     * Moves resources.
      * https://wcs.chinanetcenter.com/document/API/ResourceManage/move
      */
     public HttpClientResult move(String bucketNameSrc, String fileKeySrc, String bucketNameDest, String fileKeyDest) throws WsClientException {
@@ -219,7 +219,7 @@ public class OperationManager {
     }
 
     /**
-     * 音视频操作
+     * Audio and video operations.
      * https://wcs.chinanetcenter.com/document/API/Video-op
      */
     public HttpClientResult fops(String bucketName, String fileKey, String fops, String notifyURL, String force,String separate) throws WsClientException {
@@ -245,7 +245,7 @@ public class OperationManager {
     }
 
     /**
-     * 列举空间(list bucket)
+     * Lists buckets.
      * https://wcs.chinanetcenter.com/document/API/ResourceManage/listbucket
      */
     public HttpClientResult bucketList() throws WsClientException {
@@ -258,7 +258,7 @@ public class OperationManager {
     }
 
     /**
-     * 获取空间存储量(bucket stat)
+     * Retrieves bucket storage statistics.
      * https://wcs.chinanetcenter.com/document/API/ResourceManage/bucketstat
      */
     public HttpClientResult bucketStat(String name, String startDate, String endDate, Boolean isListDetails) throws WsClientException {

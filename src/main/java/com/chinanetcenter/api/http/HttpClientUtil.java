@@ -63,14 +63,14 @@ public class HttpClientUtil {
                     return false;
                 }
             };
-            // 5秒超时
+            // 5-second timeout
             RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(30000)
                     .setSocketTimeout(30000).setConnectTimeout(30000).setRedirectsEnabled(false)
                     .build();
 
             PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-            cm.setMaxTotal(50);// 连接池最大并发连接数
-            cm.setDefaultMaxPerRoute(30);// 单路由最大并发数
+            cm.setMaxTotal(50);// Maximum concurrent connections in the connection pool
+            cm.setDefaultMaxPerRoute(30);// Maximum concurrent connections per route
             SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(30000).build();
             cm.setDefaultSocketConfig(socketConfig);
 
@@ -99,14 +99,14 @@ public class HttpClientUtil {
                     return false;
                 }
             };
-            // 5秒超时
+            // 5-second timeout
             RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(30000)
                     .setSocketTimeout(30000).setConnectTimeout(30000).setRedirectsEnabled(false)
                     .build();
             SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(30000).build();
             if(StringUtils.startsWith(url, "https://")){
                 SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
-                    //信任所有
+                    // Trust all
                     public boolean isTrusted(X509Certificate[] chain,
                                              String authType) throws CertificateException {
                         return true;
@@ -116,8 +116,8 @@ public class HttpClientUtil {
                 return HttpClients.custom().setDefaultSocketConfig(socketConfig).setDefaultRequestConfig(requestConfig).setRetryHandler(myRetryHandler).setSSLSocketFactory(sslSf).build();
             }else {
                 PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-                cm.setMaxTotal(50);// 连接池最大并发连接数
-                cm.setDefaultMaxPerRoute(30);// 单路由最大并发数
+                cm.setMaxTotal(50);// Maximum concurrent connections in the connection pool
+                cm.setDefaultMaxPerRoute(30);// Maximum concurrent connections per route
                 cm.setDefaultSocketConfig(socketConfig);
                 httpClient = HttpClients.custom().setConnectionManager(cm).setDefaultRequestConfig(requestConfig).setRetryHandler(myRetryHandler).build();
             }
@@ -173,7 +173,7 @@ public class HttpClientUtil {
                 httpPost.addHeader("User-Agent", Config.VERSION_NO);
 //            CloseableHttpClient hc = getHttpClient();
             CloseableHttpClient hc = createHttpClient(url);
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();//设置请求和传输超时时间
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();// Set request and transfer timeout
             httpPost.setConfig(requestConfig);
             ht = hc.execute(httpPost);
 
@@ -222,7 +222,7 @@ public class HttpClientUtil {
 
 //            CloseableHttpClient hc = getHttpClient();
             CloseableHttpClient hc = createHttpClient(url);
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();//设置请求和传输超时时间
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();// Set request and transfer timeout
             httpGet.setConfig(requestConfig);
             ht = hc.execute(httpGet);
 
@@ -296,7 +296,7 @@ public class HttpClientUtil {
                 httpPost.addHeader("User-Agent", Config.VERSION_NO);
 //            hc = getHttpClient();
             hc = createHttpClient(url);
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();//设置请求和传输超时时间
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();// Set request and transfer timeout
             httpPost.setConfig(requestConfig);
             ht = hc.execute(httpPost);
 
@@ -371,7 +371,7 @@ public class HttpClientUtil {
                 httpPost.addHeader("User-Agent", Config.VERSION_NO);
 //            CloseableHttpClient hc = getHttpClient();
             CloseableHttpClient hc = createHttpClient(url);
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(120000).setConnectTimeout(120000).build();//设置请求和传输超时时间
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(120000).setConnectTimeout(120000).build();// Set request and transfer timeout
             httpPost.setConfig(requestConfig);
             ht = hc.execute(httpPost);
             HttpEntity het = ht.getEntity();
@@ -417,7 +417,7 @@ public class HttpClientUtil {
                 httpPost.addHeader("User-Agent", Config.VERSION_NO);
 //            CloseableHttpClient hc = getHttpClient();
             CloseableHttpClient hc = createHttpClient(url);
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();//设置请求和传输超时时间
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();// Set request and transfer timeout
             httpPost.setConfig(requestConfig);
             ht = hc.execute(httpPost);
 
@@ -462,7 +462,7 @@ public class HttpClientUtil {
             }
 
             CloseableHttpClient hc = createHttpClient(url);
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();//设置请求和传输超时时间
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();// Set request and transfer timeout
             httpGet.setConfig(requestConfig);
             ht = hc.execute(httpGet);
             int status = ht.getStatusLine().getStatusCode();
@@ -521,7 +521,7 @@ public class HttpClientUtil {
             }
 
             CloseableHttpClient hc = createHttpClient(url);
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();//设置请求和传输超时时间
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();// Set request and transfer timeout
             httpGet.setConfig(requestConfig);
             ht = hc.execute(httpGet);
             int status = ht.getStatusLine().getStatusCode();

@@ -4,16 +4,16 @@ package com.chinanetcenter.api.entity;
  * Created by fuyz on 2015/7/29.
  */
 public class Format {
-    private String bit_rate;  //码率
-    private String duration;  //时长
-    private String format_long_name;  //文件名全称
-    private String format_name; //文件名
-    private String nb_programs;  //程序集的数目
-    private int nb_streams;  //流的数目
-    private String probe_score; //格式探测得分
-    private long size;  //文件大小
-    private String start_time;  //首帧时间
-    private Tag tag;  //标签信息
+    private String bit_rate;  // Bit rate
+    private String duration;  // Duration
+    private String format_long_name;  // Full file name
+    private String format_name; // File name
+    private String nb_programs;  // Number of programs
+    private int nb_streams;  // Number of streams
+    private String probe_score; // Format probe score
+    private long size;  // File size
+    private String start_time;  // First frame time
+    private Tag tag;  // Tag information
 
     public String getBit_rate() {
         return bit_rate;
@@ -99,10 +99,10 @@ public class Format {
         public Tag(){
 
         }
-        private String compatible_brands; //兼容性品牌
-        private String creation_time;  //创建时间
-        private String major_brand;  //主品牌
-        private String minor_version; //次要版本
+        private String compatible_brands; // Compatible brands
+        private String creation_time;  // Creation time
+        private String major_brand;  // Major brand
+        private String minor_version; // Minor version
 
         public String getCompatible_brands() {
             return compatible_brands;

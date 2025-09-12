@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 上传文件
+ * Uploads files.
  *
  * @author zouhao
  * @version 1.0
@@ -47,15 +47,15 @@ public class FileUploadManage {
     }
 
     /**
-     * 上传文件到指定的空间，并且可以设定上传策略
+     * Uploads a file to the specified bucket with a customizable upload policy.
      *
-     * @param bucketName 上传文件要保存到所在空间的空间名
-     * @param fileKey    上传文件在空间中保存的文件名
-     * @param srcFile    上传文件本地路径
-     * @param putPolicy  上传策略  上传策略数据是资源上传时附带的一组配置设定。
-     *                   通过这组配置信息，用户可以自定义上传具体要求。它将上传什么资源，上传到哪个空间，
-     *                   上传结果是回调通知还是使用重定向跳转，是否需要设置反馈信息的内容，以及授权上传的截止时间等。
-     *                   具体属性说明请参考PutPolicy实体
+     * @param bucketName The name of the bucket where the file will be stored.
+     * @param fileKey The desired file name for the uploaded file within the bucket.
+     * @param srcFile The local path of the file to upload.
+     * @param putPolicy The upload policy. This policy defines a set of configuration settings for resource uploads.
+     *                   Through this configuration, users can customize upload requirements, including specifying resources, target bucket,
+     *                   callback notifications or redirects, feedback content, and upload authorization deadlines.
+     *                   Refer to the PutPolicy entity for detailed attribute descriptions.
      */
     public HttpClientResult upload(String bucketName, String fileKey, String srcFile, PutPolicy putPolicy) throws WsClientException {
         if (putPolicy.getDeadline() == null) {
@@ -73,15 +73,15 @@ public class FileUploadManage {
     }
 
     /**
-     * 上传文件到指定的空间，并且可以设定上传策略
+     * Uploads a file to the specified bucket with a customizable upload policy.
      *
-     * @param bucketName  上传文件要保存到所在空间的空间名
-     * @param fileKey     上传文件在空间中保存的文件名
-     * @param inputStream 文件流
-     * @param putPolicy   上传策略  上传策略数据是资源上传时附带的一组配置设定。
-     *                    通过这组配置信息，用户可以自定义上传具体要求。它将上传什么资源，上传到哪个空间，
-     *                    上传结果是回调通知还是使用重定向跳转，是否需要设置反馈信息的内容，以及授权上传的截止时间等。
-     *                    具体属性说明请参考PutPolicy实体
+     * @param bucketName The name of the bucket where the file will be stored.
+     * @param fileKey The desired file name for the uploaded file within the bucket.
+     * @param inputStream The input stream of the file.
+     * @param putPolicy The upload policy. This policy defines a set of configuration settings for resource uploads.
+     *                    Through this configuration, users can customize upload requirements, including specifying resources, target bucket,
+     *                    callback notifications or redirects, feedback content, and upload authorization deadlines.
+     *                    Refer to the PutPolicy entity for detailed attribute descriptions.
      */
     public HttpClientResult upload(String bucketName, String fileKey, String fileName, InputStream inputStream, PutPolicy putPolicy) throws WsClientException {
         if (putPolicy.getDeadline() == null) {
