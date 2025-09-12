@@ -1,51 +1,68 @@
-## wcs-java-sdk
+# wcs-java-sdk
 
-Please pre-install Java, JDK 1.6 or above recommended. 
-Note: wcs-java-sdk is not applicable for Android at present.
-### User guide
-#### Preparations
- - Add dependencies to Maven project
+This Java SDK for CDNetworks Object Storage is built on our public API specification and supports Java 1.6 and higher.
 
-        <dependency>
-            <groupId>com.chinanetcenter.wcs.sdk</groupId>
-            <artifactId>wcs-java-sdk</artifactId>
-            <version>2.0.x</version>
-        </dependency>
+**Note**: This SDK is designed for Java SE environments and is not suitable for Android development.
 
- - Download SDK
+## User Guide
 
+### Setting up the Development Environment
 
-#### Configurations
-**AK/SK**, **Domain name** and **Upload name** are required to accesss object storage. You can get them as following steps:
+- **Add the dependency in your Maven project:**
+    
+    ```
+    <dependency>
+        <groupId>com.chinanetcenter.wcs.sdk</groupId>
+        <artifactId>wcs-java-sdk</artifactId>
+        <version>2.0.x</version>
+    </dependency>
+    
+    ```
+    
+- **Using the JAR file:** [Download JARs](https://wcsd.chinanetcenter.com/sdk/cnc-java-sdk-wcs.zip)
+    
+    Add `wcs-java-sdk-x.x.x.jar` and the third-party JARs extracted from `wcs-java-sdk-x.x.x-dependencies.zip` to your project's build path.
+    
 
- - Apply for CDNetworks cloud storage service.
- - Log in CDNetworks SI portal, get the AccessKey and SecretKey in Security Console - AK/SK Management
- - Log in CDNetworks SI portal, get Upload Domain (puturl) and Manage Domain (mgrurl) in Bucket Overview -> Bucket Settings
- 
-After getting **AK/SK**, **Domain name** and **Upload name** initialize as follow：
+### Configuration
 
-    import com.chinanetcenter.api.util.Config;
+To use CDNetworks Object Storage, you need a valid Access Key (AK) and Secret Key (SK) for signature authentication. You also need to configure your `uploadDomain` and `managementDomain` to perform file operations. This configuration only needs to be initialized once in your application.
 
-    String ak = "your access key";
-    String sk = "your secrete key";
-    String PUT_URL = "your uploadDomain";
-    String GET_URL = "your downloadDomain";
-    String MGR_URL = "your mgrDomain";
-    Config.init(ak,sk,PUT_URL,GET_URL,MGR_URL);
+- Create a CDNetworks Object Storage account.
+- Log in to the CDNetworks Object Storage console. You can find your AK and SK under **Security Management** -> **Key Management**, and your domains under **Domain Query**.
 
-#### File Upload
-1. **returnUrl** and **callbackUrl** cannot be specified at the same time.
-2. Multipart upload is recommended when size of upload file is larger than 20MB.
-3. Object Storge provides normal domain for upload. CDNetworks CDN service is recommended if it's sensitive to upload speed.
-4. Auto mimetype recognization is supported in SDK.(Please reference to demo->uploadFileForAutoMimeType method)
+After obtaining your credentials, initialize the configuration as follows:
 
-Three upload modes are currently supported: Normal upload, callback upload, and notification upload.
-1. **Normal upload:** All the upload return results are controlled by Object Storage platform.
-2. **Callback upload:** Customized information is returned to client after a file is uploaded. Parameter **callbackUrl**  in upload policy is required in this way.
-3. **Notification upload:** Upload a file with file processing instructions(video transcoding, image watermark, and image scaling, etc.) **persistentOps** and **persistentNotifyUrl** in upload policy is required in this way.
+```
+import com.chinanetcenter.api.util.Config;
 
-##### Normal Upload
-**example**
+// 1. Initialize configuration
+String ak = "your access key";
+String sk = "your secrete key";
+String PUT_URL = "your uploadDomain";
+String GET_URL = "your downloadDomain";
+String MGR_URL = "your mgrDomain";
+Config.init(ak,sk,PUT_URL,GET_URL,MGR_URL);
+
+```
+
+### File Upload
+
+1. `returnUrl` and `callbackUrl` cannot be specified at the same time.
+2. For files larger than 20 MB, we recommend using multipart upload.
+3. The provided upload domain is a standard domain. For customers sensitive to upload speed, we recommend using CDNetworks' upload acceleration service.
+4. The SDK supports automatic MIME type detection (see the `uploadFileForAutoMimeType` method in the demo).
+
+There are three upload modes for different scenarios. You can choose between simple form upload or multipart upload based on the file size.
+
+1. **Standard Upload**: After the file is uploaded, the response is controlled by the Object Storage platform.
+2. **Callback Upload**: Customize the information returned to the client after the file is uploaded. This requires setting the `callbackUrl` parameter in the upload policy. The `callbackBody` parameter is optional but recommended.
+3. **Notification Upload**: Submit file processing commands (such as video transcoding, image watermarking, or image resizing) at the time of upload. This requires setting the `persistentOps` and `persistentNotifyUrl` parameters in the upload policy.
+
+### Simple Form Upload
+
+**Example:**
+
 ```
 import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.entity.PutPolicy;
@@ -69,37 +86,41 @@ public class UploadDemo {
     public static void main(String[] args) throws FileNotFoundException {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
-
+        /**
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
+         */
         Config.PUT_URL = "your uploadDomain";
         String bucketName = "your-bucket";
         String fileKey = "test.JPG";
         String fileKeyWithFolder = "folder/test.JPG";
         String srcFilePath = "D:\\testfile\\1m.JPG";
         UploadDemo demo = new UploadDemo();
-
-	// normal upload
+        // Upload a local file
+        // Standard upload
         demo.uploadFile(bucketName, fileKey, srcFilePath);
-	
-	// return information after upload
+
+        // Upload with a callback and custom return body. Specify a folder.
         //demo.uploadReturnBody(bucketName, fileKeyWithFolder, srcFilePath);
-	
-	// upload file with specified mimetype
+
+        // Upload with a specified MIME type. By default, the server determines the type from the file extension or content.
         //demo.uploadMimeType(bucketName, fileKey, srcFilePath);
-	
-	// preprocessing after upload
+
+        // Pre-process the file after uploading.
         //demo.uploadPersistent(bucketName, fileKey, srcFilePath);
-	
-	// mimetype of file will be auto recognized when uploading 
-	//demo.uploadFileForAutoMimeType(bucketName, fileKey, srcFilePath);
-	
+
+        // Automatically detect the MIME type.
+        //demo.uploadFileForAutoMimeType(bucketName, fileKey, srcFilePath);
+
+        // Upload from an input stream.
         //FileInputStream in = new FileInputStream(new File(srcFilePath));
         //demo.uploadFile(bucketName, fileKey, in);
         //demo.uploadFileForAutoMimeType(bucketName, fileKey, in);
     }
 
     /**
-     * upload a file by path of local file
-     * overwrite by default
+     * Uploads a file from a local path.
+     * Overwrites by default.
      */
     public void uploadFile(String bucketName,String fileKey,String srcFilePath){
         try {
@@ -111,8 +132,8 @@ public class UploadDemo {
     }
 
     /**
-     * upload by filestream
-     * overwirte by default
+     * Uploads a file from an InputStream. The stream will be closed by the method.
+     * Overwrites by default.
      */
     public void uploadFile(String bucketName,String fileKey,InputStream in){
         try {
@@ -124,13 +145,13 @@ public class UploadDemo {
     }
 
     /**
-     * return information after upload, specify upload policy by 'PutPolicy'
-     * callbackurl, callbackbody, returnurl is just similar
+     * To use callbacks, custom return bodies, etc., you can specify an upload policy using PutPolicy.
+     * This method demonstrates setting a returnUrl, and the process is similar for callbackUrl and callbackBody.
      */
     public void uploadReturnBody(String bucketName,String fileKey,String srcFilePath){
         String returnBody = "key=$(key)&fname=$(fname)&fsize=$(fsize)&url=$(url)&hash=$(hash)&mimeType=$(mimeType)";
         PutPolicy putPolicy = new PutPolicy();
-        putPolicy.setOverwrite(1); // file with same name in OS will be overwrite this way
+        putPolicy.setOverwrite(1); // Enable overwrite
         putPolicy.setDeadline(String.valueOf(DateUtil.nextDate(1,new Date()).getTime()));
         putPolicy.setReturnBody(returnBody);
         putPolicy.setScope(bucketName + ":" + fileKey);
@@ -143,7 +164,8 @@ public class UploadDemo {
     }
 
     /**
-     * upload file of specified mimetype
+     * Upload with a specified MIME type. The server defaults to detecting from the file extension or content.
+     * If you specify a mimeType, it will be used as the Content-Type header for downloads.
      */
     public void uploadMimeType(String bucketName,String fileKey,String srcFilePath){
         PutPolicy putPolicy = new PutPolicy();
@@ -155,7 +177,6 @@ public class UploadDemo {
             Map<String, String> paramMap = new HashMap<String, String>();
             paramMap.put("token", uploadToken);
             paramMap.put("mimeType", "application/UQ");
-	    paramMap.put("deadline", 365);
             HttpClientResult result = fileUploadManage.upload(paramMap,srcFilePath);
             System.out.println(result.getStatus() + ":" + result.getResponse());
         } catch (WsClientException e) {
@@ -164,8 +185,8 @@ public class UploadDemo {
     }
 
     /**
-     * transcoding after upload
-     * 'persistentId' is returned after upload, by which you can query the status of transcoding
+     * Transcodes the file after upload.
+     * On successful upload, a persistentId is returned, which can be used to query the transcoding status.
      */
     public void uploadPersistent(String bucketName,String fileKey,String srcFilePath){
         PutPolicy putPolicy = new PutPolicy();
@@ -173,8 +194,8 @@ public class UploadDemo {
         putPolicy.setOverwrite(1);
         putPolicy.setDeadline(String.valueOf(DateUtil.nextDate(1, new Date()).getTime()));
         putPolicy.setScope(bucketName + ":" + fileKey);
-        putPolicy.setPersistentOps("imageMogr2/jpg/crop/500x500/gravity/CENTER/lowpoly/1|saveas/ZnV5enRlc3Q4Mi0wMDE6ZG9fY3J5c3RhbGxpemVfZ3Jhdml0eV9jZW50ZXJfMTQ2NTkwMDg0Mi5qcGc="); // set video transcoding
-        putPolicy.setPersistentNotifyUrl("http://demo1/notifyUrl"); // set callback url for file transcoded
+        putPolicy.setPersistentOps("imageMogr2/jpg/crop/500x500/gravity/CENTER/lowpoly/1|saveas/ZnV5enRlc3Q4Mi0wMDE6ZG9fY3J5c3RhbGxpemVfZ3Jhdml0eV9jZW50ZXJfMTQ2NTkwMDg0Mi5qcGc="); // Set the video transcoding operation
+        putPolicy.setPersistentNotifyUrl("http://demo1/notifyUrl"); // Set the callback URL to be notified upon completion of transcoding
         putPolicy.setReturnBody(returnBody);
         try {
             HttpClientResult result = fileUploadManage.upload(bucketName,fileKey,srcFilePath,putPolicy);
@@ -183,36 +204,39 @@ public class UploadDemo {
             e.printStackTrace();
         }
     }
-	/**
-	 * upload a file by source file path, mimetype of the file will be recognized automaticlly
-	 * overwrite by default
-	 */
-	public void uploadFileForAutoMimeType(String bucketName, String fileKey, String srcFilePath) {
-		try {
-			HttpClientResult result = fileUploadManage.uploadForAutoMimeType(bucketName, fileKey, srcFilePath);
-			System.out.println(result.getStatus() + ":" + result.getResponse());
-		} catch (WsClientException e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * Uploads a file from a local path and automatically detects the MIME type.
+     * Overwrites by default.
+     */
+    public void uploadFileForAutoMimeType(String bucketName, String fileKey, String srcFilePath) {
+        try {
+            HttpClientResult result = fileUploadManage.uploadForAutoMimeType(bucketName, fileKey, srcFilePath);
+            System.out.println(result.getStatus() + ":" + result.getResponse());
+        } catch (WsClientException e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * upload files by filestream
-	 * overwrite by default
-	 */
-	public void uploadFileForAutoMimeType(String bucketName, String fileKey, InputStream in) {
-		try {
-			HttpClientResult result = fileUploadManage.uploadForAutoMimeType(bucketName, fileKey, in);
-			System.out.println(result.getStatus() + ":" + result.getResponse());
-		} catch (WsClientException e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * Uploads a file from an InputStream and automatically detects the MIME type. The stream will be closed by the method.
+     * Overwrites by default.
+     */
+    public void uploadFileForAutoMimeType(String bucketName, String fileKey, InputStream in) {
+        try {
+            HttpClientResult result = fileUploadManage.uploadForAutoMimeType(bucketName, fileKey, in);
+            System.out.println(result.getStatus() + ":" + result.getResponse());
+        } catch (WsClientException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
 ```
 
-##### Multipart Upload
-**example**
+### Multipart Upload
+
+**Example:**
+
 ```
 import com.chinanetcenter.api.entity.PutPolicy;
 import com.chinanetcenter.api.entity.SliceUploadHttpResult;
@@ -238,20 +262,32 @@ public class SliceUploadDemo {
     public static void main(String[] args) throws FileNotFoundException {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
-
+        /**
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
+         */
         Config.PUT_URL = "your uploadDomain";
         String bucketName = "your-bucket";
         String fileKey = "java-sdk/com.toycloud.MeiYe.apk";
 
         String srcFilePath = "D:\\testfile\\test001\\com.toycloud.MeiYe.apk";
-	
+
+        /**
+         * Set the chunk size to 4MB to reduce the number of upload requests.
+         * If you are on an unstable network, we do not recommend changing this parameter or suggest setting it to a smaller value to avoid timeouts. The default value is 256KB.
+         */
         BaseBlockUtil.CHUNK_SIZE = 4 * 1024 * 1024;
-	
-	BaseBlockUtil.THREAD_NUN = 5；
+
+        /**
+         * Set the number of concurrent block uploads to speed up the process.
+         * If you are on an unstable network, we do not recommend changing this parameter or suggest setting it to a smaller value to avoid timeouts. The default value is 1.
+         */
+        BaseBlockUtil.THREAD_NUN = 5;
         SliceUploadDemo demo = new SliceUploadDemo();
         demo.sliceUpload(bucketName,fileKey,srcFilePath);
-		demo.sliceUploadForAutoMimeType(bucketName, fileKey, srcFilePath);
-        /**  another method, 'key' is specified by 'head'. The method is used for multipart upload with one token
+        demo.sliceUploadForAutoMimeType(bucketName, fileKey, srcFilePath);
+        /** // Second method: Do not include the key in the scope. Instead, specify it in the header.
+             // This allows using the same token to upload multiple files.
         String fileKey2 = "java-sdk/com.toycloud.MeiYe2.apktest";
         String mimeType = "application/vnd.android.package-archive";
         demo.sliceUpload(bucketName,fileKey2,srcFilePath,mimeType);
@@ -280,36 +316,37 @@ public class SliceUploadDemo {
         headMap.put("key", EncodeUtils.urlsafeEncode(fileKey));
         sliceUploadResumable.execUpload(bucketName, fileKey, filePath, putPolicy, null, jsonObjectRet,headMap);
     }
-	/**
-	 * multipart upload, mimetype of file is recognized automaticlly
-	 *
-	 * @param bucketName
-	 * @param fileKey
-	 * @param filePath
-	 */
-	public void sliceUploadForAutoMimeType(final String bucketName, final String fileKey, final String filePath) {
-		PutPolicy putPolicy = new PutPolicy();
-		putPolicy.setScope(bucketName + ":" + fileKey);
-		putPolicy.setOverwrite(1);
-		putPolicy.setDeadline(String.valueOf(DateUtil.nextDate(1, new Date()).getTime()));
-		JSONObjectRet jsonObjectRet = getJSONObjectRet(bucketName, fileKey, filePath);
-		SliceUploadResumable sliceUploadResumable = new SliceUploadResumable();
-		sliceUploadResumable.execUploadForAutoMimeType(bucketName, fileKey, filePath, putPolicy, null, jsonObjectRet);
-	}
+    /**
+     * Performs a multipart upload and automatically detects the MIME type.
+     *
+     * @param bucketName
+     * @param fileKey
+     * @param filePath
+     */
+    public void sliceUploadForAutoMimeType(final String bucketName, final String fileKey, final String filePath) {
+        PutPolicy putPolicy = new PutPolicy();
+        putPolicy.setScope(bucketName + ":" + fileKey);
+        putPolicy.setOverwrite(1);
+        putPolicy.setDeadline(String.valueOf(DateUtil.nextDate(1, new Date()).getTime()));
+        JSONObjectRet jsonObjectRet = getJSONObjectRet(bucketName, fileKey, filePath);
+        SliceUploadResumable sliceUploadResumable = new SliceUploadResumable();
+        sliceUploadResumable.execUploadForAutoMimeType(bucketName, fileKey, filePath, putPolicy, null, jsonObjectRet);
+    }
 
     public JSONObjectRet getJSONObjectRet(final String bucketName,final String fileKey,final String filePath){
         return new JSONObjectRet() {
             /**
-             *  callback function, which is called after the file is uploaded successfully
-             * check consistency of OS file and source file by hash.
+             * This method is called back upon successful file upload.
+             * Verify that the hash of the uploaded file matches the hash of the local file.
+             * A mismatch may indicate the local file has been modified.
              */
             @Override
             public void onSuccess(JsonNode obj) {
                 File fileHash = new File(filePath);
-                String eTagHash = WetagUtil.getEtagHash(fileHash.getParent(), fileHash.getName());
+                String eTagHash = WetagUtil.getEtagHash(fileHash.getParent(), fileHash.getName());// Calculate the hash based on file content
                 SliceUploadHttpResult result = new SliceUploadHttpResult(obj);
                 if (eTagHash.equals(result.getHash())) {
-                    System.out.println("upload successfully");
+                    System.out.println("Upload successful");
                 } else {
                     System.out.println("hash not equal,eTagHash:" + eTagHash + " ,hash:" + result.getHash());
                 }
@@ -320,7 +357,7 @@ public class SliceUploadDemo {
                 System.out.println(new String(body));
             }
 
-            // callback function, which is called when the upload is failed
+            // This method is called back on upload failure.
             @Override
             public void onFailure(Exception ex) {
                 if (ex instanceof WsClientException) {
@@ -329,19 +366,19 @@ public class SliceUploadDemo {
                 }else {
                     ex.printStackTrace();
                 }
-                System.out.println("upload error, " + ex.getMessage());
+                System.out.println("Upload error, " + ex.getMessage());
             }
 
-            // callback function, which is called to show upload progress
+            // For progress display, this method is called back after each block is successfully uploaded.
             @Override
             public void onProcess(long current, long total) {
                 System.out.printf("%s\r", current * 100 / total + " %");
             }
 
             /**
-             * progress information will be saved when using persistent connection to upload 
-             * information is saved disk by default, you can save it in db by yourself if you need. 
-             * saved information will be used as parameters for savePutExtra when resuming the transmission
+             * For resumable uploads, persist the progress information.
+             * By default, the SDK saves this information to a local file. If needed, you can save it to a database yourself.
+             * When resuming the upload, assign the saved value to the PutExtra parameter.
              */
             @Override
             public void onPersist(JsonNode obj) {
@@ -350,14 +387,17 @@ public class SliceUploadDemo {
         };
     }
 }
+
 ```
 
-#### Resource Management
-Manage objects in Object Storage, including delete, move, update, etc.
+### Resource Management
 
-##### Delete Files
+Manage files stored in CDNetworks Object Storage, including operations like deleting, listing resources, etc.
 
-**example**
+### Deleting a File
+
+**Example:**
+
 ```
 import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
@@ -368,7 +408,10 @@ public class DeleteDemo {
     public static void main(String[] args) {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
-
+        /**
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
+         */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
         String fileKey = "java-sdk/testfile.jpg";
@@ -381,12 +424,15 @@ public class DeleteDemo {
         }
     }
 }
+
 ```
 
-##### Get File information
-Get information of a file in Object Storage, including name, size, ETag, etc.
+### Getting File Information
 
-**example**
+Retrieves metadata for a file, including its name, size, ETag, etc.
+
+**Example:**
+
 ```
 import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
@@ -397,7 +443,10 @@ public class StatDemo {
     public static void main(String[] args) {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
-
+        /**
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
+         */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
         String fileKey = "java-sdk/testfile.jpg";
@@ -410,12 +459,15 @@ public class StatDemo {
         }
     }
 }
+
 ```
 
-##### List Resources
-List files in a specified bucket.
+### Listing Resources
 
-**Example**
+Lists the resources within a specified bucket.
+
+**Example:**
+
 ```
 import com.chinanetcenter.api.entity.FileListObject;
 import com.chinanetcenter.api.entity.FileMessageObject;
@@ -432,7 +484,10 @@ public class ListDemo {
     public static void main(String[] args) {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
-
+        /**
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
+         */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
         try {
@@ -473,11 +528,15 @@ public class ListDemo {
         }
     }
 }
-```
-##### Copy Resources
-Copy a specified file in a bucket and then rename it. 
 
-**example**
+```
+
+### Copying a Resource
+
+Copies a specified resource to a new resource with a different name. If a resource with the target name already exists, it will not be overwritten.
+
+**Example:**
+
 ```
 import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
@@ -488,7 +547,10 @@ public class CopyDemo {
     public static void main(String[] args) {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
-
+        /**
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
+         */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
         String fileKey = "java-sdk/testfile.jpg";
@@ -503,12 +565,15 @@ public class CopyDemo {
         }
     }
 }
+
 ```
 
-##### Move Resources
-Move a specified file from source bucket to a target bucket. If there is a same-name file in target bucket, the movement will be failed.
+### Moving a Resource
 
-**example**
+Moves a resource to a different bucket or renames it within the same bucket. If a resource with the target name already exists, it will not be overwritten.
+
+**Example:**
+
 ```
 import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
@@ -519,7 +584,10 @@ public class MoveDemo {
     public static void main(String[] args) {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
-
+        /**
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
+         */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
         String fileKey = "java-sdk/testfile2.jpg";
@@ -534,12 +602,15 @@ public class MoveDemo {
         }
     }
 }
+
 ```
 
-##### Update Mirror Bucket Resources
-Update a specified file from source bucket to its mirror bucket.(Mirror bucket should be pre-created in Object Storage.)
+### Updating a Mirrored Resource
 
-**范例：**
+For buckets with mirroring configured, this feature allows you to fetch a specific resource from the origin and store it in the bucket. If a resource with the same name already exists in the bucket, it will be overwritten by the resource from the origin.
+
+**Example:**
+
 ```
 import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
@@ -552,7 +623,10 @@ public class PreFetchDemo {
     public static void main(String[] args) {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
-
+        /**
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
+         */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
         new PreFetchDemo().prefetch(bucketName);
@@ -560,8 +634,8 @@ public class PreFetchDemo {
 
     public void prefetch(String bucketName) {
         OperationManager fileManageCommand = new OperationManager();
-        String fileName1 = "testPreFetch1.png";
-        String fileName2 = "testPreFetch2.png";
+        String fileName1 = "testPreFetch1.png"; // File name
+        String fileName2 = "testPreFetch2.png"; // File name
         ArrayList<String> fileKeys = new ArrayList<String>();
         fileKeys.add(fileName1);
         fileKeys.add(fileName2);
@@ -574,12 +648,15 @@ public class PreFetchDemo {
         }
     }
 }
+
 ```
-#### Audio/Video Proccessing
 
-Object Storage provides audio and video proccessing, including transcoding, transmuxing, video splicing, audio splicing, etc.
+### Audio/Video Processing
 
-**example**
+Provides audio and video processing features, including transcoding, transmuxing, and concatenation. For detailed processing parameters, please refer to the [Audio/Video Processing Ops Parameter Format](https://www.google.com/search?q=https://www.cdnetworks.com/document/API/Appendix/fopsParam%23%E9%9F%B3%E8%A7%86%E9%A2%91%E5%A4%84%E7%90%86).
+
+**Example:**
+
 ```
 import com.chinanetcenter.api.entity.HttpClientResult;
 import com.chinanetcenter.api.exception.WsClientException;
@@ -591,16 +668,21 @@ public class FopsDemo {
     public static void main(String[] args) {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
-
+        /**
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
+         */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
         String fileKey = "java-sdk/10m2.mp4";
-        // set transcoding parameters
+        // Set transcoding operation parameters
         String fops = "avthumb/mp4/s/640x360/vb/1.25m";
-
+        // You can use the 'saveas' parameter to specify a custom name for the transcoded file.
+        // If not specified, a default name will be used, and the file will be saved in the current bucket.
+        // The 'saveas' value is a Base64 encoding of 'Target_Bucket_Name:Custom_File_Key'.
         String saveAsKey = EncodeUtils.urlsafeEncode(bucketName + ":1.256m.jpg");
         fops += "|saveas/" + saveAsKey;
-        String notifyURL = "http://demo1/notifyUrl";  
+        String notifyURL = "http://demo1/notifyUrl";  // Notification URL. This URL will be called back upon successful transcoding.
         String force = "1";
         String separate = "1";
         FopsDemo demo = new FopsDemo();
@@ -618,11 +700,15 @@ public class FopsDemo {
         }
     }
 }
-```
-#### Fetch Resources
-Get a file from specified URL and save it to specified bucket.
 
-**example**
+```
+
+### Fetching a Remote Resource
+
+Fetches a resource from a specified URL and stores it in a designated bucket.
+
+**Example:**
+
 ```
 import com.chinanetcenter.api.entity.FmgrParam;
 import com.chinanetcenter.api.entity.HttpClientResult;
@@ -637,7 +723,10 @@ public class FmgrFetchDemo {
     public static void main(String[] args) {
         Config.AK = "your-ak";
         Config.SK = "your-sk";
-
+        /**
+         * You can get your uploadDomain and MgrDomain from the console
+         * under Security Management -> Domain Query. Remember to add the "http://" prefix.
+         */
         Config.MGR_URL = "your MgrDomain";
         String bucketName = "your-bucket";
         FmgrFileManage fileManageCommand = new FmgrFileManage();
@@ -647,15 +736,15 @@ public class FmgrFetchDemo {
             fmgrParam.setBucket(bucketName);
             fmgrParam.setFetchURL("https://wcs.chinanetcenter.com/indexNew/image/pic1.jpg");
             fmgrParam.setFileKey("indexNew/image/pic1.jpg");
-	    fmgrParam.putExtParams("fetchTS", "0");
+            fmgrParam.putExtParams("fetchTS", "0");
             list.add(fmgrParam);
             FmgrParam fmgrParam2 = new FmgrParam();
             fmgrParam2.setBucket(bucketName);
             fmgrParam2.setFetchURL("https://wcs.chinanetcenter.com/indexNew/image/pic2.m3u8");
             fmgrParam2.setFileKey("indexNew/image/pic2.m3u8");
-	    fmgrParam.putExtParams("fetchTS", "0");
+            fmgrParam.putExtParams("fetchTS", "0");
             list.add(fmgrParam2);
-            String notifyURL = "http://demo1/notifyUrl";  
+            String notifyURL = "http://demo1/notifyUrl";  // Notification URL. This URL will be called back upon successful processing.
             String force = "1";
             String separate = "1";
             HttpClientResult result = fileManageCommand.fmgrFetch(list, notifyURL, force, separate);
@@ -665,26 +754,5 @@ public class FmgrFetchDemo {
         }
     }
 }
-```
 
-#### Download Resources
-Download a file from a URL of specified domain name and file name.
-```
-/**
- * Download
- */
-public class DownloadDemo {
-    public static void main(String[] args) {
-        String downloadDomain = "your download domain";
-        String fileKey = "file name";
-        String filePath = "local path";
-        OperationManager fileManageCommand = new OperationManager();
-        try {
-            HttpClientResult result = fileManageCommand.download(downloadDomain, fileKey, filePath, null);
-            System.out.println(result.getStatus());
-        } catch (WsClientException e) {
-            e.printStackTrace();
-        }
-    }
-}
 ```

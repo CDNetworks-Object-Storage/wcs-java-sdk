@@ -4,22 +4,6 @@ This Java SDK for CDNetworks Object Storage is built on our public API specifica
 
 **Note**: This SDK is designed for Java SE environments and is not suitable for Android development.
 
-- [User Guide](https://www.google.com/search?q=%23user-guide)
-    - [Setting up the Development Environment](https://www.google.com/search?q=%23setting-up-the-development-environment)
-    - [Configuration](https://www.google.com/search?q=%23configuration)
-    - [File Upload](https://www.google.com/search?q=%23file-upload)
-        - [Simple Form Upload](https://www.google.com/search?q=%23simple-form-upload)
-        - [Multipart Upload](https://www.google.com/search?q=%23multipart-upload)
-    - [Resource Management](https://www.google.com/search?q=%23resource-management)
-        - [Deleting a File](https://www.google.com/search?q=%23deleting-a-file)
-        - [Getting File Information](https://www.google.com/search?q=%23getting-file-information)
-        - [Listing Resources](https://www.google.com/search?q=%23listing-resources)
-        - [Copying a Resource](https://www.google.com/search?q=%23copying-a-resource)
-        - [Moving a Resource](https://www.google.com/search?q=%23moving-a-resource)
-        - [Updating a Mirrored Resource](https://www.google.com/search?q=%23updating-a-mirrored-resource)
-    - [Audio/Video Processing](https://www.google.com/search?q=%23audiovideo-processing)
-    - [Fetching a Remote Resource](https://www.google.com/search?q=%23fetching-a-remote-resource)
-
 ## User Guide
 
 ### Setting up the Development Environment
